@@ -25,8 +25,8 @@
             "label": "Flash", // マイコンへの書き込み
             "type": "shell",
             "command": "C:\\Program Files (x86)\\Renesas Electronics\\Programming Tools\\Renesas Flash Programmer V3.08\\RFPV3.Console.exe",
-            "args": [ // 引数を指定
-                "${env:USERPROFILE}\\Documents\\Renesas Flash Programmer\\V3.06\\noritamouse\\noritamouse.rpj", // プロジェクトファイル(.rpj)をディレクトリから指定する
+            "args": [
+                "${env:USERPROFILE}\\Documents\\Renesas Flash Programmer\\V3.06\\noritamouse\\noritamouse.rpj",
             ],
         }
     ]

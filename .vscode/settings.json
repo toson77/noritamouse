@@ -1,0 +1,13 @@
+{
+    "files.encoding": "shiftjis",
+    "C_Cpp.default.defines": [
+        "_DEBUG",
+        "UNICODE",
+        "_UNICODE",
+        "_VSCODE"
+    ],
+    "C_Cpp.default.includePath": [
+        "${workspaceFolder}/**",
+        "C:\\Program Files (x86)\\Renesas Electronics\\CS+\\CC\\CC-RX\\V3.03.00\\include"
+    ],
+}

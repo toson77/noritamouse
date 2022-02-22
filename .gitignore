@@ -1,0 +1,11 @@
+# Ignore All
+*
+!*/
+
+#Allowlist
+!*.c
+!*.h
+!*.mtpj
+!.gitignore
+!.gitattributes
+!.vscode/*

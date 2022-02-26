@@ -10,3 +10,4 @@
 !.gitattributes
 !.vscode/*
 !*.md
+!*.pdf

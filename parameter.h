@@ -38,10 +38,10 @@
 #define TURN_ACCEL 1.0        //回転加速度[m/s^2]
 #define SLALOM_TURN_ACCEL 1.0 //スラローム加速度[m/s^2]
 
-#define REF_LF 390         //左横壁センサ基準値
-#define REF_RF 290          //右横壁センサ基準値
-#define LEFT_THRESHOLD 275  //左壁センサ閾値
-#define RIGHT_THRESHOLD 240 //右壁センサ閾値
+#define REF_LF 278         //左横壁センサ基準値
+#define REF_RF 417          //右横壁センサ基準値
+#define LEFT_THRESHOLD 104  //左壁センサ閾値
+#define RIGHT_THRESHOLD 158 //右壁センサ閾値
 #define FRONT_THRESHOLD 560 //前壁センサ閾値
 #define FRONT_WALL_STOPL 2733
 #define FRONT_WALL_STOPR 1582

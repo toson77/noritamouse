@@ -6,10 +6,10 @@
 #include "interrupt.h"
 #include "log.h"
 
-#define MAZE_SIZE 16
+#define MAZE_SIZE 4
 // start 0 0
-#define GOAL_X_COODINATE 8
-#define GOAL_Y_COODINATE 8
+#define GOAL_X_COODINATE 3
+#define GOAL_Y_COODINATE 3
 
 //ƒOƒ[ƒoƒ‹•Ï”--------------
 char x_coordinate = 0;

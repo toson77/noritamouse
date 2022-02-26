@@ -27,7 +27,7 @@
 #define MAX_VEL 3.0       //最高速度[m/s]
 #define MIN_VEL 0.2      //最低速度[m/s]
 #define MIN_OMEGA 200.0   //最低角速度[deg/s]
-#define SEARCH_SPEED 0.4  //探索速度[m/s]
+#define SEARCH_SPEED 0.3  //探索速度[m/s]
 #define SEARCH_ACCEL 0.5  //探索加速度[m/s^2]
 #define FAST_SPEED 0.3    //最短速度[m/s]
 #define FAST_ACCEL 1.0    //最短加速度[m/s^2]
@@ -39,7 +39,7 @@
 #define SLALOM_TURN_ACCEL 1.0 //スラローム加速度[m/s^2]
 
 #define REF_LF 278         //左横壁センサ基準値
-#define REF_RF 417          //右横壁センサ基準値
+#define REF_RF 343          //右横壁センサ基準値
 #define LEFT_THRESHOLD 114  //左壁センサ閾値
 #define RIGHT_THRESHOLD 168 //右壁センサ閾値
 #define FRONT_THRESHOLD 560 //前壁センサ閾値

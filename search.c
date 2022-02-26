@@ -69,8 +69,9 @@ void adachi_method(void){
 	init_wall();		//ï«èÓïÒèâä˙âª
 	init_stepMap();		//ï‡êîÉ}ÉbÉvèâä˙âª
 	update_stepMap();	//ï‡êîÉ}ÉbÉvçÏê¨
-	m_dir = 0;		//ç≈èâÇÕñkå¸Ç´
-	
+	m_dir = 0;
+			//ç≈èâÇÕñkå¸Ç´
+	revision_back(0.2, 0.5, 3);
 	straight(0.135, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1,0,-1);
 	
 	while(1){
@@ -130,34 +131,34 @@ void adachi_method(void){
 			//âEâÒì]
 			if( (left_val >  right_val) && exist_l_wall == 1 && exist_f_wall == 1) {
 				
-				turn(-90.0, 300.0, 0, 500.0);
+				turn(-90.0, 300.0, 0, 600.0);
 				revision_back(0.3,0.5,5);
 				straight(0.035, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0,-1);
 				wait_ms(100);
 				
-				turn(-90.0, 300.0, 0, 500.0);
+				turn(-90.0, 300.0, 0, 600.0);
 				revision_back(0.3,0.5,5);
 				wait_ms(100);
 			}
 			//ç∂âÒì]
 			else if(exist_r_wall == 1 && exist_f_wall == 1){
-				turn(90.0, 300.0, 0, 500.0);
+				turn(90.0, 300.0, 0, 600.0);
 				revision_back(0.3,0.5,5);
 				straight(0.035, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0,-1);
 				wait_ms(100);
 				
-				turn(90.0, 300.0, 0, 500.0);
+				turn(90.0, 300.0, 0, 600.0);
 				
 				revision_back(0.3,0.5,5);
 				wait_ms(100);
 				
 			}
 			else if(exist_f_wall == 1) {
-				turn(180.0, 300.0, 0, 500.0);
+				turn(180.0, 300.0, 0, 600.0);
 				revision_back(0.3,0.5,5);
 			}
 			else {
-				turn(180.0, 300.0, 0, 500.0);
+				turn(180.0, 300.0, 0, 600.0);
 				revision_back(0.035,0.5,5);
 			}
 				

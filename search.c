@@ -106,7 +106,8 @@ void adachi_method(void){
 			//before_flg = 1;
 			log_save(1,1,1,1);
 			// 両方壁ないとき壁制御入れるとバグるかも
-			straight(HALF_SECTION, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,1,nextdir);
+			//straight(HALF_SECTION, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 1, nextdir);
+			straight(HALF_SECTION, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 0, nextdir);
 			wait_ms(100);
 			turn(-90.0, 300.0, 0, 500.0);
 			wait_ms(100);
@@ -116,13 +117,12 @@ void adachi_method(void){
 		//Uターン
 		if( nextdir == 2 ){
 			log_save(2,2,2,2);
-			//turn(180.0, 700, 0, 3000);
-			//straight(HALF_SECTION, SEARCH_SPEED, 0, SEARCH_ACCEL, 1,0,-1);
 			
 			straight(0.04, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 0,0,-1);
 			unsigned int left_val = abs((int)get_sen_value(LF_SEN) - REF_LF);
 			unsigned int right_val = abs((int)get_sen_value(RF_SEN) - REF_RF);
-			straight(0.04, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,1,nextdir);
+			// straight(0.04, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,1,nextdir);
+			straight(0.04, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0,nextdir);
 			wait_sec(1);
 			
 			
@@ -137,7 +137,6 @@ void adachi_method(void){
 				turn(-90.0, 300.0, 0, 500.0);
 				revision_back(0.3,0.5,5);
 				wait_ms(100);
-				//straight(0.135, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1,0);
 			}
 			//左回転
 			else if(exist_r_wall == 1 && exist_f_wall == 1){
@@ -151,7 +150,6 @@ void adachi_method(void){
 				revision_back(0.3,0.5,5);
 				wait_ms(100);
 				
-				//straight(0.135, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1,0);
 			}
 			else if(exist_f_wall == 1) {
 				turn(180.0, 300.0, 0, 500.0);
@@ -175,13 +173,8 @@ void adachi_method(void){
 		//左折
 		if( nextdir == 3 ){
 			log_save(3,3,3,3);
-			//before_flg = 1;
-			//straight(0.015, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1,0);
-			//slalom(82.0, TURN_OMEGA, 0, TURN_ALPHA);
-			//straight(0.080, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1,0);
-			
-			//straight(0.045, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1,0);
-			straight(HALF_SECTION, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,1,nextdir);
+			//straight(HALF_SECTION, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 1, nextdir);
+			straight(HALF_SECTION, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 0, nextdir);
 			wait_ms(100);
 			turn(90.0, 300.0, 0, 500.0);
 			wait_ms(100);

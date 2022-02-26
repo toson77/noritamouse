@@ -89,6 +89,7 @@ void adachi_method(void){
 		//is•ûŒü”»’f
 		nextdir = adachi_judge_nextdir();
 		//’¼i
+		LED(nextdir);
 		if( nextdir == 0 ){
 			log_save(0,0,0,0);
 			if (before_flg == 1){

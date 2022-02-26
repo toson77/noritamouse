@@ -1,5 +1,7 @@
 #ifndef __7SEG_HEADER__
 #define __7SEG_HEADER__
+void ledseg_0_ON(void);
+void ledseg_0_OFF(void);
 void ledseg_1_ON(void);
 void ledseg_1_OFF(void);
 void ledseg_2_ON(void);
@@ -21,6 +23,7 @@ void ledseg_9_OFF(void);
 void ledseg_x_ON(void);
 void ledseg_x_OFF(void);
 void ledseg_x_interrupt(short count);
+void ledseg_0_interrupt(short count);
 void ledseg_1_interrupt(short count);
 void ledseg_2_interrupt(short count);
 void ledseg_3_interrupt(short count);

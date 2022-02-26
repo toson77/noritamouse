@@ -2,6 +2,35 @@
 #include "define.h"
 #include "interrupt.h"
 
+void ledseg_0_ON(void)
+{
+	LED_7SEG_5 = 0;
+	LED_7SEG_6 = 0;
+	LED_7SEG_1 = 0;
+	LED_7SEG_2 = 0;
+	LED_7SEG_3 = 0;
+	LED_7SEG_7 = 0;
+}
+void ledseg_0_OFF(void)
+{
+	LED_7SEG_5 = 1;
+	LED_7SEG_6 = 1;
+	LED_7SEG_1 = 1;
+	LED_7SEG_2 = 1;
+	LED_7SEG_3 = 1;
+	LED_7SEG_7 = 1;
+}
+void ledseg_0_interrupt(short count)
+{
+	for (int i = 0; i < count; i++)
+	{
+		ledseg_0_OFF();
+		wait_ms(100);
+		ledseg_0_ON();
+		wait_ms(100);
+	}
+}
+
 void ledseg_1_ON(void){
 	 LED_7SEG_1 = 0;
 	 LED_7SEG_2 = 0;
@@ -236,6 +265,9 @@ void LED(short mode) {
 	ledseg_all_off();
 	
 	switch(mode) {
+		case 0:
+			ledseg_0_ON();
+			break;
 		case 1:
 			ledseg_1_ON();
 			break;

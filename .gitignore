@@ -10,4 +10,4 @@
 !.gitattributes
 !.vscode/*
 !*.md
-!shematics/*
+!schematics/*

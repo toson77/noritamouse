@@ -128,7 +128,8 @@ void mtu3_tgrb(){
 		
 		case 5:
 			control_wall();		//ï«êßå‰
-		break;
+			f_wall_control(); //ëOï«êßå‰
+			break;
 		
 		case 6:
 			

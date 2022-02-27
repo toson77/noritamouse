@@ -8,6 +8,8 @@ void slalom( float _angle, float _top_omega, float _end_omega, float _alpha );
 void control_speed(void);
 void pid_speed(void);
 void control_wall(void);
+void f_wall_control(void);
+void enable_f_wall_control(void);
 void change_motor_speed(void);
 void no_attack(void);
 void reset_run_status(void);

@@ -43,8 +43,8 @@
 #define LEFT_THRESHOLD 114  //左壁センサ閾値
 #define RIGHT_THRESHOLD 168 //右壁センサ閾値
 #define FRONT_THRESHOLD 560 //前壁センサ閾値
-#define FRONT_WALL_STOPL 2500
-#define FRONT_WALL_STOPR 1810
+#define FRONT_WALL_STOPL 2500 //前壁補正目標値
+#define FRONT_WALL_STOPR 1810 //前壁補正目標値
 
 #define TR_SENSOR_FRONT_WALL_R	410 //前壁近づいてきたとき壁センサ切る値
 #define TR_SENSOR_FRONT_WALL_L	810 //前壁近づいてきたとき壁センサ切る値
@@ -79,5 +79,7 @@
 //壁制御
 #define WALLR_KP 0.002
 #define WALLL_KP 0.002
+//前壁制御ゲイン
+#define F_WALL_KP 0.005
 
 #endif

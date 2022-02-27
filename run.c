@@ -15,45 +15,47 @@
 /*フラグ--------------------------------------*/
 //加減等速状態を知らせる
 //turn_flgは超新地旋回時に摩擦項を足すため...(超新地旋回時のみ1, 直進やスラローム時は0)
-char run_state, turn_state, turn_flg;
+static char run_state, turn_state, turn_flg;
 //速度制御有効フラグ
-char speed_control_flg = 0;
+static char speed_control_flg = 0;
 //壁制御有効フラグ
-char wall_control_flg = 0;
-char forward_wall_stop_flg = 0;
-char length_reset_flg = 0;
+static char wall_control_flg = 0;
+static char forward_wall_stop_flg = 0;
+static char length_reset_flg = 0;
+// 前壁補正用壁制御フラグ
+static char f_wall_control_flg = 0;
 
 /*速度, 加速度, 距離-------------------------*/
 //目標角度, 最高速度, 終端速度, 加速度, 最高角速度, 終端角速度, 角加速度
-float target_speed, target_omega;
-float angle;
-float accel = 0.0;
-float alpha = 0.0;
+static float target_speed, target_omega;
+static float angle;
+static float accel = 0.0;
+static float alpha = 0.0;
 //1msごとの追従目標速度, 距離, 角速度, 角度
-volatile float static tar_vel = 0.0;
-volatile float static tar_dis = 0.0;
-volatile float static tar_omega = 0.0;
-volatile float static tar_angle = 0.0;
+static volatile float tar_vel = 0.0;
+static volatile float tar_dis = 0.0;
+static volatile float tar_omega = 0.0;
+static volatile float tar_angle = 0.0;
 //1ms前の実際の左右速度
 static float previous_vel_r = 0.0;
 static float previous_vel_l = 0.0;
 //実際の左右速度, 中心速度, 角速度
-float current_vel_r = 0.0;
-float current_vel_l = 0.0;
-volatile float current_vel_ave = 0.0;
-float current_omega = 0.0;
+static float current_vel_r = 0.0;
+static float current_vel_l = 0.0;
+static volatile float current_vel_ave = 0.0;
+static float current_omega = 0.0;
 //実際の左右距離, 平均, 角度
-volatile float current_dis_r = 0.0;
-volatile float current_dis_l = 0.0;
-volatile float current_dis_ave = 0.0;
-volatile float current_angle = 0.0;
-float length;
+static volatile float current_dis_r = 0.0;
+static volatile float current_dis_l = 0.0;
+static volatile float current_dis_ave = 0.0;
+static volatile float current_angle = 0.0;
+static float length;
 
 /*制御計算用-------------------------*/
-//横壁センサ値
-short sensor_lf, sensor_rf;
 //偏差
-short error;
+static short error;
+//前壁距離誤差
+static short f_dis_err;
 
 /*モータ制御用-------------------------*/
 //右モータの出力電圧, 左モータの出力電圧
@@ -594,7 +596,7 @@ void control_speed(void){
 	if(get_time(TYPE_MYMS) % 2 == 0) {
 		//log_save((short)(current_omega), (short)(tar_omega),(short)(current_angle),(short)(angle));
 		//log_save((short)(current_vel_r*1000), (short)(current_vel_l*1000),(short)(tar_vel*1000),(short)(angle));
-		log_save((short)(current_dis_ave*1000), (short)(current_vel_ave*1000), (short)(tar_vel*1000), (short)(length*1000));
+		//log_save((short)(current_dis_ave*1000), (short)(current_vel_ave*1000), (short)(tar_vel*1000), (short)(length*1000));
 		//log_save(1,1);
 		
 	}
@@ -696,20 +698,23 @@ void pid_speed(void){
 		//log_save(1,1);
 		
 	}
-	if( wall_control_flg == 1 ){
-		//右に寄ってるとき
-		if(error > 0){
+	//横壁制御
+	if( wall_control_flg == 1 )
+	{
 		r_control += error * WALLR_KP;
 		l_control -= error * WALLR_KP;
-		}
-		//左に寄ってるとき
-		else{
-		r_control += error * WALLL_KP;
-		l_control -= error * WALLL_KP;
-		}
 	}
-	
-		
+	//前壁制御
+	if (f_wall_control_flg == 1)
+	{
+		//前後距離
+		r_control += f_dis_err * F_WALL_KP;
+		l_control += f_dis_err * F_WALL_KP;
+		//角度
+		r_control += error * F_WALL_KP;
+		l_control -= error * F_WALL_KP;
+	}
+
 	//出力電圧計算
 	V_r += r_control;
 	V_l += l_control;
@@ -740,27 +745,24 @@ void pid_speed(void){
 	//フェイルセーフ
 	if(duty_r >= 80) duty_r = 80;
 	if(duty_l >= 80) duty_l = 80;
+	//log_save(V_r, V_l,duty_r,duty_l);
 }
 
 //壁制御( 1ms割り込み )
 //*速度制御より前に記述
 void control_wall(void){
-	short ref_lf, ref_rf;		//機体中心時の横壁センサ基準値
-	short l_threshold, r_threshold;	//横壁センサ閾値
-	
 	if( wall_control_flg == 0 ) return;
+	//横壁センサ閾値
+	short l_threshold = LEFT_THRESHOLD;
+	short r_threshold = RIGHT_THRESHOLD;
 	
-	//閾値設定
-	l_threshold = LEFT_THRESHOLD;
-	r_threshold = RIGHT_THRESHOLD;
-	
-	//基準値設定
-	ref_lf = REF_LF;
-	ref_rf = REF_RF;
+	//機体中心時の横壁センサ基準値
+	short ref_lf = REF_LF;
+	short ref_rf = REF_RF;
 	
 	//センサ値格納
-	sensor_lf = get_sen_value(LF_SEN);
-	sensor_rf = get_sen_value(RF_SEN);
+	short sensor_lf = get_sen_value(LF_SEN);
+	short sensor_rf = get_sen_value(RF_SEN);
 	
 	if( (sensor_rf > r_threshold) && (sensor_lf > l_threshold) ){
 		//両壁がある場合
@@ -775,6 +777,38 @@ void control_wall(void){
 		//左壁のみある場合
 		error = -2 * ((sensor_lf - ref_lf));
 	}
+}
+
+void enable_f_wall_control(void) {
+	MOT_STBY = 1;
+	f_wall_control_flg = 1;
+	speed_control_flg = 1;
+	wait_sec(10);
+	MOT_STBY = 0;
+}
+
+//前壁制御(1ms割り込み)
+void f_wall_control(void) {
+	if(f_wall_control_flg == 0) return;
+	short ref_ls = FRONT_WALL_STOPL;
+	short ref_rs = FRONT_WALL_STOPR;
+	short sensor_ls = get_sen_value(LS_SEN);
+	short sensor_rs = get_sen_value(RS_SEN);
+	//前後
+		f_dis_err = (ref_rs - sensor_rs) + (ref_ls - sensor_ls);
+	//角度
+	//右に偏ってるとき
+	if(ref_rs > sensor_rs && ref_ls < sensor_ls) {
+		error = -(sensor_rs - ref_rs) + (sensor_ls - ref_ls);
+	}
+	//左に偏っている時
+	else if (ref_rs < sensor_rs && ref_ls > sensor_ls) {
+		error = -(sensor_rs - ref_rs) + (sensor_ls - ref_ls);
+	}
+	else {
+		error = 0;
+	}
+	log_save(f_dis_err, error, 0, 0);
 }
 
 //モーター速度変化( 10us割り込み )

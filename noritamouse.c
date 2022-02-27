@@ -40,20 +40,7 @@ void abort(void);
 #endif
 
 void straight_wall_on_test() {
-	/*
-	straight(SECTION*2+0.045, 0.3, 0, 1.0, 1,0);
-	wait_ms(500);
-	turn(90.0, 300.0, 0, 500.0);
-	wait_ms(500);
-	turn(90.0, 300.0, 0, 500.0);
-	wait_ms(500);
-	straight(SECTION*2, 0.3, 0, 1.0, 1,0);
-	wait_ms(500);
-	turn(-180.0, 300.0, 0, 500.0);
-	*/
 	straight(0.135+SECTION*2, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0,-1);
-	//turn(-90.0, 500.0, 0, 500.0);
-	//straight(HALF_SECTION, SEARCH_SPEED, 0, SEARCH_ACCEL, 1,0);
 }
 void turn_mini_test() {
 	straight(0.045, 0.3, 0, 1.0, 1,0,-1);
@@ -69,21 +56,7 @@ void turn_mini_test() {
 	turn(-180.0, 300.0, 0, 500.0);
 }
 void back_test() {
-	/*
-	turn(-90.0, 300.0, 0, 500.0);
-	revision_back(0.3);
-	straight(0.035, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0);
-	wait_ms(500);
-				
-	turn(-90.0, 300.0, 0, 500.0);
-	revision_back(0.3);
-	wait_ms(100);
-	straight(0.035, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0);
-	*/
 	revision_back(0.01, SEARCH_SPEED, SEARCH_ACCEL);
-	//straight(0.05, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0);
-	//turn(-360.0, 300.0, 0, 500.0);
-	//turn(360.0, 300.0, 0, 500.0);
 }
 	
 
@@ -142,7 +115,8 @@ void main(void)
 			case 4:
 				if((int)get_sen_value(LF_SEN)+(int)get_sen_value(LS_SEN)+(int)get_sen_value(RS_SEN)+(int)get_sen_value(RF_SEN) > SEN_DICISION) {
 					ledseg_4_interrupt(INTERRUPT_COUNT); //LED“_–Å
-					wait_ms(500);			
+					enable_f_wall_control();
+					wait_ms(500);
 				}
 				
 				break;
@@ -197,51 +171,6 @@ void main(void)
 					wait_ms(100);
 				
 					straight(0.135, SEARCH_SPEED, 0, SEARCH_ACCEL, 1,0,-1);
-					/*
-					//start
-					straight(0.13, 0.3, 0.3, 1.0, 1,0);
-					
-					//straight
-					straight(SECTION*2, 0.3, 0.3, 1.0, 1,0);
-					
-					//right
-					straight(0.05, 0.3, 0.3, 1.0, 1,0);
-					straight(0.04, 0.3, 0, 1.0, 0,0);
-					wait_ms(500);
-					turn(-90.0, 500.0, 0, 500.0);
-					wait_ms(500);
-					straight(0.085, 0.3, 0.3, 1.0, 0,0);
-					
-					//straight
-					straight(SECTION*2, 0.3, 0.3, 1.0, 1,0);
-					
-					//right
-					straight(0.05, 0.3, 0.3, 1.0, 1,0);
-					straight(0.04, 0.3, 0, 1.0, 0,0);
-					wait_ms(500);
-					turn(-90.0, 500.0, 0, 500.0);
-					wait_ms(500);
-					straight(0.085, 0.3, 0.3, 1.0, 0,0);
-					
-					//straight
-					straight(SECTION*2, 0.3, 0.3, 1.0, 1,0);
-					
-					//right
-					straight(0.05, 0.3, 0.3, 1.0, 1,0);
-					straight(0.04, 0.3, 0, 1.0, 0,0);
-					wait_ms(500);
-					turn(-90.0, 500.0, 0, 500.0);
-					wait_ms(500);
-					straight(0.085, 0.3, 0.3, 1.0, 0,0);
-					
-					//straight
-					straight(SECTION+0.045, 0.3, 0, 1.0, 1,0);
-					
-					turn(-180.0, 500.0, 0, 500.0);
-					*/
-					
-					
-					
 				}
 				
 				break;

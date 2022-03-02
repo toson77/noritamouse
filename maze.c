@@ -290,6 +290,7 @@ void set_wall(_x_coordinate, _y_coordinate, _m_dir)
 	exist_f_wall = 0;
 	exist_r_wall = 0;
 	signed char temp_dir = _m_dir;
+	log_save(get_sen_value(LF_SEN), get_sen_value(LS_SEN), get_sen_value(RS_SEN), get_sen_value(RF_SEN));
 	if (get_sen_value(LF_SEN) > LEFT_THRESHOLD)
 	{
 		exist_l_wall = 1;

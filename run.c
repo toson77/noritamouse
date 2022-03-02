@@ -153,7 +153,7 @@ void straight(float _length, float _top_speed, float _end_speed, float _accel, c
 					if(exist_l_wall == 1) {
 						turn(-90.0, 300.0, 0, 500.0);
 						revision_back(0.3,0.5,5);
-						straight(0.035, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0,-1);
+						straight(0.05, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0,-1);
 						wait_ms(100);
 					
 						turn(90.0, 300.0, 0, 500.0);
@@ -162,7 +162,7 @@ void straight(float _length, float _top_speed, float _end_speed, float _accel, c
 					else {
 						turn(-180.0, 300.0, 0, 500.0);
 						revision_back(0.3,0.5,5);
-						straight(0.035, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0,-1);
+						straight(0.05, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0,-1);
 						wait_ms(100);
 						turn(180.0, 300.0, 0, 500.0);
 					}
@@ -174,7 +174,7 @@ void straight(float _length, float _top_speed, float _end_speed, float _accel, c
 					if(exist_r_wall == 1) {
 						turn(90.0, 300.0, 0, 500.0);
 						revision_back(0.3,0.5,5);
-						straight(0.035, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0,-1);
+						straight(0.05, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0,-1);
 						wait_ms(100);
 					
 						turn(-90.0, 300.0, 0, 500.0);
@@ -183,7 +183,7 @@ void straight(float _length, float _top_speed, float _end_speed, float _accel, c
 					else {
 						turn(180.0, 300.0, 0, 500.0);
 						revision_back(0.3,0.5,5);
-						straight(0.035, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0,-1);
+						straight(0.05, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0,-1);
 						wait_ms(100);
 						turn(-180.0, 300.0, 0, 500.0);
 					}

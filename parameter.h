@@ -12,7 +12,7 @@
 
 //機体固有定数
 #define MOUSE_WEIGHT 100     //機体重量[g]  
-#define TREAD 0.0719          //トレッド幅[m] 回転調整、距離が合っているなら弄る、距離があっていないならタイヤ直径を先に弄る 回転がデカい場合は小さく、小さい場合は大きく
+#define TREAD 0.0721          //トレッド幅[m] 回転調整、距離が合っているなら弄る、距離があっていないならタイヤ直径を先に弄る 回転がデカい場合は小さく、小さい場合は大きく
 #define REDUCTION_RATIO 3.75 //減速比
 //SCR13-2005モーターの定数
 #define TORQUE_CONSTANT 4.49     //トルク定数Kt[mN*m/A]
@@ -40,8 +40,8 @@
 
 #define REF_LF 278         //左横壁センサ基準値
 #define REF_RF 343          //右横壁センサ基準値
-#define LEFT_THRESHOLD 114  //左壁センサ閾値
-#define RIGHT_THRESHOLD 168 //右壁センサ閾値
+#define LEFT_THRESHOLD 125  //左壁センサ閾値
+#define RIGHT_THRESHOLD 175 //右壁センサ閾値
 #define FRONT_THRESHOLD 560 //前壁センサ閾値
 #define FRONT_WALL_STOPL 2500 //前壁補正目標値
 #define FRONT_WALL_STOPR 1810 //前壁補正目標値

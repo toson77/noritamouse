@@ -72,7 +72,7 @@ void adachi_method(void){
 	m_dir = 0;
 			//最初は北向き
 	revision_back(0.2, 0.5, 3);
-	straight(0.135, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1,0,-1);
+	straight(0.145, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1,0,-1);
 	
 	while(1){
 		update_coordinate();	//座標更新
@@ -104,7 +104,7 @@ void adachi_method(void){
 		}
 		//右折
 		if( nextdir == 1 ){
-			log_save(1,1,1,1);
+			//log_save(1,1,1,1);
 			//before_flg = 1;
 			log_save(1,1,1,1);
 			// 両方壁ないとき壁制御入れるとバグるかも
@@ -133,7 +133,7 @@ void adachi_method(void){
 				
 				turn(-90.0, 300.0, 0, 600.0);
 				revision_back(0.3,0.5,5);
-				straight(0.035, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0,-1);
+				straight(0.045, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0,-1);
 				wait_ms(100);
 				
 				turn(-90.0, 300.0, 0, 600.0);
@@ -144,7 +144,7 @@ void adachi_method(void){
 			else if(exist_r_wall == 1 && exist_f_wall == 1){
 				turn(90.0, 300.0, 0, 600.0);
 				revision_back(0.3,0.5,5);
-				straight(0.035, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0,-1);
+				straight(0.045, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0,-1);
 				wait_ms(100);
 				
 				turn(90.0, 300.0, 0, 600.0);
@@ -163,7 +163,7 @@ void adachi_method(void){
 			}
 				
 				
-			straight(0.135, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1,0,-1);
+			straight(0.145, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1,0,-1);
 			
 			//Uターンだから m_dir -= 2 
 			if(--m_dir < 0)	m_dir = 3;
@@ -175,7 +175,6 @@ void adachi_method(void){
 		//左折
 		if( nextdir == 3 ){
 			log_save(3,3,3,3);
-			//straight(HALF_SECTION, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 1, nextdir);
 			straight(HALF_SECTION, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 0, nextdir);
 			wait_ms(100);
 			turn(90.0, 300.0, 0, 500.0);
@@ -195,7 +194,7 @@ void adachi_method(void){
 //生成したパスに沿って最短走行を行う関数
 void run_shortestRoute(void){
 	short i=0;
-	straight(0.035, FAST_SPEED,  FAST_SPEED, FAST_ACCEL, 1,0,-1);
+	straight(0.05, FAST_SPEED,  FAST_SPEED, FAST_ACCEL, 1,0,-1);
 	while(1){
 		if( path[i] <= 15 ){		//直進
 			straight(SECTION*path[i], FAST_SPEED, 0, FAST_ACCEL, 1,0,-1);

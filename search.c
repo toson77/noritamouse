@@ -108,8 +108,8 @@ void adachi_method(void){
 			//before_flg = 1;
 			log_save(1,1,1,1);
 			// óºï˚ï«Ç»Ç¢Ç∆Ç´ï«êßå‰ì¸ÇÍÇÈÇ∆ÉoÉOÇÈÇ©Ç‡
-			//straight(HALF_SECTION, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 1, nextdir);
-			straight(HALF_SECTION, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 0, nextdir);
+			straight(HALF_SECTION, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 1, nextdir);
+			//straight(HALF_SECTION, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 0, nextdir);
 			wait_ms(100);
 			turn(-90.0, 300.0, 0, 500.0);
 			wait_ms(100);
@@ -123,8 +123,8 @@ void adachi_method(void){
 			straight(0.04, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 0,0,-1);
 			unsigned int left_val = abs((int)get_sen_value(LF_SEN) - REF_LF);
 			unsigned int right_val = abs((int)get_sen_value(RF_SEN) - REF_RF);
-			// straight(0.04, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,1,nextdir);
-			straight(0.04, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0,nextdir);
+			straight(0.04, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,1,nextdir);
+			//straight(0.04, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0,nextdir);
 			wait_sec(1);
 			
 			

@@ -63,7 +63,7 @@ void mtu3_tgra(){
 		break;
 		
 		case 7:
-			forward_stop();		//‘O•ûÕ“Ë–h~
+
 		break;
 		
 		case 8:	

@@ -103,8 +103,25 @@ void straight(float _length, float _top_speed, float _end_speed, float _accel, c
 	//v1^2 - v0^2 = 2ax より機体加速, 減速可能距離を算出
 	accel_length = ( ( _top_speed + start_speed ) * ( _top_speed - start_speed ) ) / ( 2.0 * _accel );
 	brake_length = ( ( _top_speed + _end_speed ) * ( _top_speed - _end_speed ) ) / ( 2.0 * _accel );
+	//top_speed = end_speedの場合
+	if(brake_length < 0.0001) {
+		while(current_dis_ave < length) {
+			//前壁近づいてきたら壁制御切る
+			if (get_sen_value(LS_SEN) > TR_SENSOR_FRONT_WALL_L && get_sen_value(RS_SEN) > TR_SENSOR_FRONT_WALL_R)
+			{
+				wall_control_flg = 0;
+			}
+		}
+		tar_dis = 0;
+		current_dis_r = 0;
+		current_dis_l = 0;
+		current_dis_ave = 0;
+		tar_angle = 0;
+		current_angle = 0;
+		return;
+	}
 	//加速可能距離+減速可能距離が走行距離より長かったら減速開始地点を変更する
-	if( length < ( accel_length + brake_length ) ){
+	if( length < ( accel_length + brake_length )){
 		//top_speed^2 - start_speed^2 = 2.0 * acc * x1(加速距離)
 		//end_speed^2 - top_speed^2 = 2.0 * -acc * x2(減速距離)
 		//(x1 + x2) = length
@@ -116,7 +133,7 @@ void straight(float _length, float _top_speed, float _end_speed, float _accel, c
 	start_timer = get_time(TYPE_SEC); 
 	
 	//減速区間まで等速
-	while( current_dis_ave < ( length - brake_length ) ) {
+	while( current_dis_ave < ( length - brake_length) ) {
 		
 		//前壁近づいてきたら壁制御切る
 		if(get_sen_value(LS_SEN) > TR_SENSOR_FRONT_WALL_L && get_sen_value(RS_SEN) > TR_SENSOR_FRONT_WALL_R){
@@ -143,7 +160,22 @@ void straight(float _length, float _top_speed, float _end_speed, float _accel, c
 		//衝突時修正
 		if(forward_wall_stop_flg == 1) {
 			//タイヤロック解除処理
-			if(get_time(TYPE_SEC) - start_timer > 2 && lock_flg == 0) {
+			if(-0.001 < current_vel_ave && current_vel_ave < 0.001) {
+				//前壁補正オン
+				f_wall_control_flg = 1;
+				wait_ms(500);
+				//前壁補正オフ
+				f_wall_control_flg = 0;
+				//スピード制御OFF
+				speed_control_flg = 0;
+				direction_r_mot(MOT_BRAKE);
+				direction_l_mot(MOT_BRAKE);
+				duty_r = 0;
+				duty_l = 0;
+				reset_run_status();
+				return;
+
+				/*
 				//back
 				reset_run_status();
 				revision_back(0.03,SEARCH_SPEED,SEARCH_ACCEL);
@@ -190,12 +222,20 @@ void straight(float _length, float _top_speed, float _end_speed, float _accel, c
 						
 				}
 				return;
+				*/
 			}
 		}
 	}
 	
 	//停止処理
 	if( _end_speed > -0.0009 && _end_speed < 0.0009 ){
+		if(exist_f_wall == 1){
+			//前壁補正オン
+			f_wall_control_flg = 1;
+			wait_ms(500);
+			//前壁補正オフ
+			f_wall_control_flg = 0;
+		}
 		//スピード制御OFF
 		speed_control_flg = 0;
 		direction_r_mot(MOT_BRAKE);
@@ -486,38 +526,6 @@ void slalom( float _angle, float _top_omega, float _end_omega, float _alpha ){
 	
 }
 
-void forward_stop(void){
-	if (forward_wall_stop_flg == 0) return;
-	int l_sen_val = get_sen_value(LS_SEN);
-	int r_sen_val = get_sen_value(RS_SEN);
-	if ((l_sen_val + r_sen_val) / 2 > FRONT_WALL_STOPR){
-		if(l_sen_val < 850 || r_sen_val < 270){
-			return;
-		}
-		else{
-		//log_save(l_sen_val);
-		//log_save(r_sen_val);
-		//log_save(0);
-		tar_vel = 0;
-		length_reset_flg = 1;
-		}
-	}
-}
-
-void no_attack(void){
-	MOT_STBY = 1;
-	speed_control_flg = 1;
-	if(( get_sen_value(LS_SEN) + get_sen_value(RS_SEN) ) / 2 < FRONT_WALL_STOPR){
-		target_speed = -0.1;
-	}
-	else if (( get_sen_value(LS_SEN) + get_sen_value(RS_SEN) ) / 2 > FRONT_WALL_STOPR + 10){
-		target_speed = 0.1;
-	}
-	else{
-		target_speed = 0;
-	}
-}
-
 //速度制御( 1ms割り込み )
 void control_speed(void){
 	
@@ -737,14 +745,32 @@ void pid_speed(void){
 	
 	//電源電圧取得
 	V_bat = get_battery_voltage();
+
+	//duty算出
+	//前壁補正ゲインセーブ
+	if(f_wall_control_flg == 1) {
+		short tmp_duty_r = (V_r / V_bat) * 100;
+		short tmp_duty_l = (V_l / V_bat) * 100;
+		if (tmp_duty_l > 10) {
+			duty_l = 10;
+		}else{
+			duty_l = tmp_duty_l;
+		}
+		if(tmp_duty_r > 10) {
+			duty_r = 10;
+		}else{
+			duty_r = tmp_duty_r;
+		}
+	}else{
+		//duty[%]算出
+		duty_r = (V_r / V_bat) * 100;
+		duty_l = (V_l / V_bat) * 100;
+	}
 	
-	//duty[%]算出
-	duty_r = (V_r / V_bat) * 100;
-	duty_l = (V_l / V_bat) * 100;
 	
 	//フェイルセーフ
-	if(duty_r >= 80) duty_r = 80;
-	if(duty_l >= 80) duty_l = 80;
+	if(duty_r >= 60) duty_r = 60;
+	if(duty_l >= 60) duty_l = 60;
 	//log_save(V_r, V_l,duty_r,duty_l);
 }
 

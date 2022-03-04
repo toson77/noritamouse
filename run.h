@@ -11,11 +11,9 @@ void control_wall(void);
 void f_wall_control(void);
 void enable_f_wall_control(void);
 void change_motor_speed(void);
-void no_attack(void);
 void reset_run_status(void);
 void print_state_test(void);
 void print_run_log(void);
-void forward_stop(void);
 void revision_back(float _length, float top_speed, float accell);
 enum wall{
 	RIGHT_WALL,

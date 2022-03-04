@@ -194,7 +194,7 @@ void adachi_method(void){
 //生成したパスに沿って最短走行を行う関数
 void run_shortestRoute(void){
 	short i=0;
-	straight(0.05, FAST_SPEED,  FAST_SPEED, FAST_ACCEL, 1,0,-1);
+	straight(0.04, FAST_SPEED,  FAST_SPEED, FAST_ACCEL, 1,0,-1);
 	while(1){
 		if( path[i] <= 15 ){		//直進
 			straight(SECTION*path[i], FAST_SPEED, 0, FAST_ACCEL, 1,0,-1);

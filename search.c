@@ -71,6 +71,10 @@ void adachi_method(void){
 	update_stepMap();	//歩数マップ作成
 	m_dir = 0;
 			//最初は北向き
+	turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
+	revision_back(0.2, 0.5, 3);
+	straight(0.045, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 0, -1);
+	turn(-90.0, TURN_OMEGA, 0, TURN_ALPHA);
 	revision_back(0.2, 0.5, 3);
 	straight(0.145, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1,0,-1);
 	
@@ -110,9 +114,9 @@ void adachi_method(void){
 			// 両方壁ないとき壁制御入れるとバグるかも
 			straight(HALF_SECTION, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 1, nextdir);
 			//straight(HALF_SECTION, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 0, nextdir);
-			wait_ms(100);
-			turn(-90.0, 300.0, 0, 500.0);
-			wait_ms(100);
+			wait_ms(1); //最初左車輪回らないなぜ
+			turn(-90.0, TURN_OMEGA, 0, TURN_ALPHA);
+			//wait_ms(100);
 			straight(HALF_SECTION, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1,0,-1);
 			if(++m_dir > 3)	m_dir = 0;
 		}
@@ -125,40 +129,40 @@ void adachi_method(void){
 			unsigned int right_val = abs((int)get_sen_value(RF_SEN) - REF_RF);
 			straight(0.04, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,1,nextdir);
 			//straight(0.04, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0,nextdir);
-			wait_sec(1);
+			wait_ms(100);
 			
 			
 			//右回転
 			if( (left_val >  right_val) && exist_l_wall == 1 && exist_f_wall == 1) {
 				
-				turn(-90.0, 300.0, 0, 600.0);
+				turn(-90.0, TURN_OMEGA, 0, TURN_ALPHA);
 				revision_back(0.3,0.5,5);
 				straight(0.045, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0,-1);
 				wait_ms(100);
 				
-				turn(-90.0, 300.0, 0, 600.0);
+				turn(-90.0, TURN_OMEGA, 0, TURN_ALPHA);
 				revision_back(0.3,0.5,5);
 				wait_ms(100);
 			}
 			//左回転
 			else if(exist_r_wall == 1 && exist_f_wall == 1){
-				turn(90.0, 300.0, 0, 600.0);
+				turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
 				revision_back(0.3,0.5,5);
 				straight(0.045, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0,-1);
 				wait_ms(100);
 				
-				turn(90.0, 300.0, 0, 600.0);
+				turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
 				
 				revision_back(0.3,0.5,5);
 				wait_ms(100);
 				
 			}
 			else if(exist_f_wall == 1) {
-				turn(180.0, 300.0, 0, 600.0);
+				turn(180.0, TURN_OMEGA, 0, TURN_ALPHA);
 				revision_back(0.3,0.5,5);
 			}
 			else {
-				turn(180.0, 300.0, 0, 600.0);
+				turn(180.0, TURN_OMEGA, 0, TURN_ALPHA);
 				revision_back(0.035,0.5,5);
 			}
 				
@@ -176,16 +180,16 @@ void adachi_method(void){
 		if( nextdir == 3 ){
 			log_save(3,3,3,3);
 			straight(HALF_SECTION, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 0, nextdir);
-			wait_ms(100);
-			turn(90.0, 300.0, 0, 500.0);
-			wait_ms(100);
+			//wait_ms(100);
+			turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
+			//wait_ms(100);
 			straight(HALF_SECTION, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1,0,-1);
 			if(--m_dir < 0)	m_dir = 3;
 		}
 	}
 	//終了行動
 	straight(0.06, SEARCH_SPEED, 0, SEARCH_ACCEL, 1,0,nextdir);
-	turn(180.0, 700, 0, 7000);
+	turn(180.0, TURN_OMEGA, 0, TURN_ALPHA);
 	log_save(9,9,9,9);
 	
 	generate_adachi_shortestRoute();	//最短経路パス生成

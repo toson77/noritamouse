@@ -94,6 +94,8 @@ void straight(float _length, float _top_speed, float _end_speed, float _accel, c
 	MOT_STBY = 1;
 	speed_control_flg = 1;
 	wall_control_flg = _wall_control;
+	//始動時壁制御flg
+	short tmp_wall_control_flg = _wall_control;
 	turn_flg = 0;
 	forward_wall_stop_flg = _forward_wall;
 	
@@ -139,7 +141,35 @@ void straight(float _length, float _top_speed, float _end_speed, float _accel, c
 		if(get_sen_value(LS_SEN) > TR_SENSOR_FRONT_WALL_L && get_sen_value(RS_SEN) > TR_SENSOR_FRONT_WALL_R){
 			wall_control_flg = 0;
 		}
-		
+		//始動時壁制御切る
+		if(current_vel_ave < 0.05) {
+			wall_control_flg = 0;
+		}else if (current_vel_ave >= 0.05 && tmp_wall_control_flg == 1) {
+			wall_control_flg = 1;
+		}
+		//衝突時修正
+		if (forward_wall_stop_flg == 1)
+		{
+			//始動時ロック検知防止
+			wait_ms(100);
+			//タイヤロック解除処理
+			if (-0.0001 < current_vel_ave && current_vel_ave < 0.0001)
+			{
+				//前壁補正オン
+				f_wall_control_flg = 1;
+				wait_ms(500);
+				//前壁補正オフ
+				f_wall_control_flg = 0;
+				//スピード制御OFF
+				speed_control_flg = 0;
+				direction_r_mot(MOT_BRAKE);
+				direction_l_mot(MOT_BRAKE);
+				duty_r = 0;
+				duty_l = 0;
+				reset_run_status();
+				return;
+			}
+		}
 	}
 	
 	//減速開始
@@ -175,54 +205,6 @@ void straight(float _length, float _top_speed, float _end_speed, float _accel, c
 				reset_run_status();
 				return;
 
-				/*
-				//back
-				reset_run_status();
-				revision_back(0.03,SEARCH_SPEED,SEARCH_ACCEL);
-				//右折中
-				if(nextdir==1) {
-					//左壁あるとき
-					if(exist_l_wall == 1) {
-						turn(-90.0, 300.0, 0, 500.0);
-						revision_back(0.3,0.5,5);
-						straight(0.05, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0,-1);
-						wait_ms(100);
-					
-						turn(90.0, 300.0, 0, 500.0);
-					}
-					//左壁ない時
-					else {
-						turn(-180.0, 300.0, 0, 500.0);
-						revision_back(0.3,0.5,5);
-						straight(0.05, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0,-1);
-						wait_ms(100);
-						turn(180.0, 300.0, 0, 500.0);
-					}
-						
-				}
-				//左折中(右壁あるとき)
-				else if(nextdir==3) {
-					//右壁あるとき
-					if(exist_r_wall == 1) {
-						turn(90.0, 300.0, 0, 500.0);
-						revision_back(0.3,0.5,5);
-						straight(0.05, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0,-1);
-						wait_ms(100);
-					
-						turn(-90.0, 300.0, 0, 500.0);
-					}
-					//右壁ない時
-					else {
-						turn(180.0, 300.0, 0, 500.0);
-						revision_back(0.3,0.5,5);
-						straight(0.05, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0,-1);
-						wait_ms(100);
-						turn(-180.0, 300.0, 0, 500.0);
-					}
-						
-				}
-				return;
-				*/
 			}
 		}
 	}
@@ -303,16 +285,17 @@ void revision_back(float _length, float top_speed, float accell){
 		brake_length = ( top_speed2 - ( _end_speed * _end_speed ) ) / ( 2.0 * _accel );
 	}
 	
-	start_timer = get_time(TYPE_SEC); 
-	
 	//減速区間まで等速
 	while( current_dis_ave > -( length - brake_length ) ) {
+		//これがないと始動時タイヤロック入る
+		wait_ms(100);
 		//タイヤロック解除処理
-		if(get_time(TYPE_SEC) - start_timer > 1) {
+		if (-0.0001 < current_vel_ave && current_vel_ave < 0.0001)
+		{
+			wait_ms(100);
 			//reset_run_status();
 			break;
 		}
-			
 	}
 	
 	//減速開始
@@ -327,7 +310,9 @@ void revision_back(float _length, float top_speed, float accell){
 			break;
 		}
 		//タイヤロック解除処理
-		if(get_time(TYPE_SEC) - start_timer > 1) {
+		if (-0.0001 < current_vel_ave && current_vel_ave < 0.0001)
+		{
+			wait_ms(100);
 			break;
 		}
 	}

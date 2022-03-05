@@ -96,7 +96,7 @@ void adachi_method(void){
 		//直進
 		LED(nextdir);
 		if( nextdir == 0 ){
-			log_save(0,0,0,0);
+			//log_save(0,0,0,0);
 			if (before_flg == 1){
 				straight(SECTION, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 0,0,nextdir);
 			}
@@ -110,7 +110,7 @@ void adachi_method(void){
 		if( nextdir == 1 ){
 			//log_save(1,1,1,1);
 			//before_flg = 1;
-			log_save(1,1,1,1);
+			//log_save(1,1,1,1);
 			// 両方壁ないとき壁制御入れるとバグるかも
 			straight(HALF_SECTION, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 1, nextdir);
 			//straight(HALF_SECTION, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 0, nextdir);
@@ -122,7 +122,7 @@ void adachi_method(void){
 		}
 		//Uターン
 		if( nextdir == 2 ){
-			log_save(2,2,2,2);
+			//log_save(2,2,2,2);
 			
 			straight(0.04, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 0,0,-1);
 			unsigned int left_val = abs((int)get_sen_value(LF_SEN) - REF_LF);
@@ -178,7 +178,7 @@ void adachi_method(void){
 		}
 		//左折
 		if( nextdir == 3 ){
-			log_save(3,3,3,3);
+			//log_save(3,3,3,3);
 			straight(HALF_SECTION, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 0, nextdir);
 			//wait_ms(100);
 			turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
@@ -190,15 +190,17 @@ void adachi_method(void){
 	//終了行動
 	straight(0.06, SEARCH_SPEED, 0, SEARCH_ACCEL, 1,0,nextdir);
 	turn(180.0, TURN_OMEGA, 0, TURN_ALPHA);
-	log_save(9,9,9,9);
-	
-	generate_adachi_shortestRoute();	//最短経路パス生成
+	//壁判定flg初期化
+	init_wall_exist_flg();
+	// log_save(9,9,9,9);
+
+	generate_adachi_shortestRoute(); //最短経路パス生成
 }
 
 //生成したパスに沿って最短走行を行う関数
 void run_shortestRoute(void){
 	short i=0;
-	straight(0.04, FAST_SPEED,  FAST_SPEED, FAST_ACCEL, 1,0,-1);
+	straight(0.048, FAST_SPEED,  FAST_SPEED, FAST_ACCEL, 1,0,-1);
 	while(1){
 		if( path[i] <= 15 ){		//直進
 			straight(SECTION*path[i], FAST_SPEED, 0, FAST_ACCEL, 1,0,-1);

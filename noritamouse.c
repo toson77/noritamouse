@@ -40,7 +40,9 @@ void abort(void);
 #endif
 
 void straight_wall_on_test() {
-	straight(SECTION*3, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0,-1);
+	straight(0.048, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1, 0, -1);
+	straight(SECTION, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1, 0, -1);
+	straight(SECTION * 2, SEARCH_SPEED, 0, SEARCH_ACCEL, 1, 0, -1);
 }
 void turn_mini_test() {
 	straight(0.045, 0.3, 0, 1.0, 1,0,-1);

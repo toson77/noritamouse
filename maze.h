@@ -25,6 +25,7 @@ extern enum dir{
 };
 
 void init_wall(void);
+void init_wall_exist_flg(void);
 void init_stepMap(void);
 void update_stepMap(void);
 char adachi_judge_nextdir(void);

@@ -589,7 +589,7 @@ void control_speed(void){
 	if(get_time(TYPE_MYMS) % 2 == 0) {
 		//log_save((short)(current_omega), (short)(tar_omega),(short)(current_angle),(short)(angle));
 		//log_save((short)(current_vel_r*1000), (short)(current_vel_l*1000),(short)(tar_vel*1000),(short)(angle));
-		//log_save((short)(current_dis_ave*1000), (short)(current_vel_ave*1000), (short)(tar_vel*1000), (short)(length*1000));
+		log_save((short)(current_dis_ave*1000), (short)(current_vel_ave*1000), (short)(tar_vel*1000), (short)(length*1000));
 		//log_save(1,1);
 		
 	}
@@ -819,7 +819,7 @@ void f_wall_control(void) {
 	else {
 		error = 0;
 	}
-	log_save(f_dis_err, error, 0, 0);
+	//log_save(f_dis_err, error, 0, 0);
 }
 
 //モーター速度変化( 10us割り込み )

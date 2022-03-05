@@ -282,6 +282,11 @@ void add_wall(char _x_coordinate, char _y_coordinate, char _dir)
 	}
 }
 
+void init_wall_exist_flg(void) {
+	exist_f_wall = 0;
+	exist_f_wall = 0;
+	exist_r_wall = 0;
+}
 //ある座標と機体向きにおいて左と前と右センサの値が閾値を超えていたらその方向の壁に壁を入れる関数
 void set_wall(_x_coordinate, _y_coordinate, _m_dir)
 {

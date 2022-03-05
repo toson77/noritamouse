@@ -87,8 +87,8 @@ void main(void)
 					wait_sec(2);
 					run_shortestRoute();
 
-					break;
 				}
+				break;
 			
 			/*ç≈íZëñçs1*/
 			case 2:

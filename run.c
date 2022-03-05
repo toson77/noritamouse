@@ -357,9 +357,9 @@ void turn( float _angle, float _top_omega, float _end_omega, float _alpha ){
 	
 	//モーターON, 速度制御ON, 壁制御OFF, ターンフラグON
 	MOT_STBY = 1;
-	speed_control_flg = 1;
-	wall_control_flg = 0;
 	turn_flg = 1;
+	wall_control_flg = 0;
+	speed_control_flg = 1;
 	
 	//目標角度が負なら計算のため正に直す
 	if( angle < 0.0 )	angle = -angle;

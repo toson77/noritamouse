@@ -72,11 +72,11 @@ void adachi_method(void){
 	//ç≈èâÇÕñkå¸Ç´
 	m_dir = 0;
 	//èâä˙çsìÆ
-	turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
-	doing_f_wall_revision();
-	turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
-	doing_f_wall_revision();
 	turn(180.0, TURN_OMEGA, 0, TURN_ALPHA);
+	doing_f_wall_revision();
+	turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
+	doing_f_wall_revision();
+	turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
 	straight(HALF_SECTION, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1,0);
 	
 	while(1){
@@ -128,47 +128,33 @@ void adachi_method(void){
 			straight(0.04, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 0,0);
 			unsigned int left_val = abs((int)get_sen_value(LF_SEN) - REF_LF);
 			unsigned int right_val = abs((int)get_sen_value(RF_SEN) - REF_RF);
-			straight(0.04, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,1,nextdir);
+			straight(0.04, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,1);
 			//straight(0.04, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0,nextdir);
 			wait_ms(100);
 			
 			
-			//âEâÒì]
-			if( (left_val >  right_val) && exist_l_wall == 1 && exist_f_wall == 1) {
-				
-				turn(-90.0, TURN_OMEGA, 0, TURN_ALPHA);
-				revision_back(0.3,0.5,5);
-				straight(0.045, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0);
-				wait_ms(100);
-				
-				turn(-90.0, TURN_OMEGA, 0, TURN_ALPHA);
-				revision_back(0.3,0.5,5);
-				wait_ms(100);
-			}
 			//ç∂âÒì]
-			else if(exist_r_wall == 1 && exist_f_wall == 1){
-				turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
-				revision_back(0.3,0.5,5);
-				straight(0.045, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0);
-				wait_ms(100);
+			if( (left_val <  right_val) && exist_l_wall == 1 && exist_f_wall == 1) {
 				
 				turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
-				
-				revision_back(0.3,0.5,5);
+				doing_f_wall_revision();
+				turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
 				wait_ms(100);
-				
 			}
-			else if(exist_f_wall == 1) {
-				turn(180.0, TURN_OMEGA, 0, TURN_ALPHA);
-				revision_back(0.3,0.5,5);
+			//âEâÒì]
+			else if(exist_r_wall == 1 && exist_f_wall == 1){
+				turn(-90.0, TURN_OMEGA, 0, TURN_ALPHA);
+				doing_f_wall_revision();
+				turn(-90.0, TURN_OMEGA, 0, TURN_ALPHA);
+				wait_ms(100);
+				
 			}
 			else {
 				turn(180.0, TURN_OMEGA, 0, TURN_ALPHA);
-				revision_back(0.035,0.5,5);
 			}
 				
 				
-			straight(0.145, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1,0);
+			straight(HALF_SECTION, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1,0);
 			
 			//UÉ^Å[ÉìÇæÇ©ÇÁ m_dir -= 2 
 			if(--m_dir < 0)	m_dir = 3;
@@ -180,7 +166,7 @@ void adachi_method(void){
 		//ç∂ê‹
 		if( nextdir == 3 ){
 			//log_save(3,3,3,3);
-			straight(HALF_SECTION, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 0, nextdir);
+			straight(HALF_SECTION, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 1);
 			//wait_ms(100);
 			turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
 			//wait_ms(100);
@@ -202,15 +188,11 @@ void adachi_method(void){
 		if(exist_r_wall == 1){
 			turn(-90.0, TURN_OMEGA, 0, TURN_ALPHA);
 			doing_f_wall_revision();
-			turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
-			doing_f_wall_revision();
-			turn(180.0, TURN_OMEGA, 0, TURN_ALPHA);
+			turn(-90.0, TURN_OMEGA, 0, TURN_ALPHA);
 		}else if(exist_l_wall == 1) {
 			turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
 			doing_f_wall_revision();
-			turn(-90.0, TURN_OMEGA, 0, TURN_ALPHA);
-			doing_f_wall_revision();
-			turn(180.0, TURN_OMEGA, 0, TURN_ALPHA);
+			turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
 		}
 		straight(HALF_SECTION, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1, 0);
 		// UÉ^Å[ÉìÇæÇ©ÇÁ m_dir -= 2
@@ -275,48 +257,33 @@ void adachi_method(void){
 			straight(0.04, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 0, 0);
 			unsigned int left_val = abs((int)get_sen_value(LF_SEN) - REF_LF);
 			unsigned int right_val = abs((int)get_sen_value(RF_SEN) - REF_RF);
-			straight(0.04, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 1, nextdir);
+			straight(0.04, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 1);
 			// straight(0.04, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0,nextdir);
 			wait_ms(100);
 
-			//âEâÒì]
-			if ((left_val > right_val) && exist_l_wall == 1 && exist_f_wall == 1)
+			//ç∂âÒì]
+			if ((left_val < right_val) && exist_l_wall == 1 && exist_f_wall == 1)
 			{
 
-				turn(-90.0, TURN_OMEGA, 0, TURN_ALPHA);
-				revision_back(0.3, 0.5, 5);
-				straight(0.045, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 0);
-				wait_ms(100);
-
-				turn(-90.0, TURN_OMEGA, 0, TURN_ALPHA);
-				revision_back(0.3, 0.5, 5);
+				turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
+				doing_f_wall_revision();
+				turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
 				wait_ms(100);
 			}
-			//ç∂âÒì]
+			//âEâÒì]
 			else if (exist_r_wall == 1 && exist_f_wall == 1)
 			{
-				turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
-				revision_back(0.3, 0.5, 5);
-				straight(0.045, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 0);
+				turn(-90.0, TURN_OMEGA, 0, TURN_ALPHA);
+				doing_f_wall_revision();
+				turn(-90.0, TURN_OMEGA, 0, TURN_ALPHA);
 				wait_ms(100);
-
-				turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
-
-				revision_back(0.3, 0.5, 5);
-				wait_ms(100);
-			}
-			else if (exist_f_wall == 1)
-			{
-				turn(180.0, TURN_OMEGA, 0, TURN_ALPHA);
-				revision_back(0.3, 0.5, 5);
 			}
 			else
 			{
 				turn(180.0, TURN_OMEGA, 0, TURN_ALPHA);
-				revision_back(0.035, 0.5, 5);
 			}
 
-			straight(0.145, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1, 0);
+			straight(HALF_SECTION, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1, 0);
 
 			// UÉ^Å[ÉìÇæÇ©ÇÁ m_dir -= 2
 			if (--m_dir < 0)
@@ -328,7 +295,7 @@ void adachi_method(void){
 		if (nextdir == 3)
 		{
 			// log_save(3,3,3,3);
-			straight(HALF_SECTION, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 0, nextdir);
+			straight(HALF_SECTION, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 1);
 			// wait_ms(100);
 			turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
 			// wait_ms(100);

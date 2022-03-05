@@ -5,7 +5,7 @@
 #include "interrupt.h"
 #include "run.h"
 
-#define LOG_SIZE	1500
+#define LOG_SIZE	1000
 
 short run_log[4][LOG_SIZE] = {0};
 unsigned short log_cnt = 0;

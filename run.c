@@ -69,9 +69,8 @@ static short duty_l = 0;
 
 //台形加減速
 //距離, 最高速, 終端速, 加速度, 壁制御有無( ON:1, OFF:0 ), 前壁衝突防止flg(off:0)
-void straight(float _length, float _top_speed, float _end_speed, float _accel, char _wall_control, char _forward_wall,char _nextdir){
+void straight(float _length, float _top_speed, float _end_speed, float _accel, char _wall_control, char _forward_wall){
 	volatile unsigned int start_timer;//タイヤがロックした時の対策
-	char nextdir = _nextdir;
 	char lock_flg = 0; //タイヤロック処理済みflg
 	//目標距離
 	//float length;
@@ -737,12 +736,12 @@ void pid_speed(void){
 		short tmp_duty_r = (V_r / V_bat) * 100;
 		short tmp_duty_l = (V_l / V_bat) * 100;
 		if (tmp_duty_l > 10) {
-			duty_l = 10;
+			duty_l = 20;
 		}else{
 			duty_l = tmp_duty_l;
 		}
 		if(tmp_duty_r > 10) {
-			duty_r = 10;
+			duty_r = 20;
 		}else{
 			duty_r = tmp_duty_r;
 		}
@@ -790,11 +789,13 @@ void control_wall(void){
 	}
 }
 
-void enable_f_wall_control(void) {
+void doing_f_wall_revision(void) {
 	MOT_STBY = 1;
 	f_wall_control_flg = 1;
 	speed_control_flg = 1;
-	wait_sec(10);
+	wait_ms(500);
+	f_wall_control_flg = 0;
+	speed_control_flg = 0;
 	MOT_STBY = 0;
 }
 

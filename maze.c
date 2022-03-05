@@ -6,7 +6,7 @@
 #include "interrupt.h"
 #include "log.h"
 
-#define MAZE_SIZE 4
+#define MAZE_SIZE 16
 // start 0 0
 #define GOAL_X_COODINATE 3
 #define GOAL_Y_COODINATE 3
@@ -29,6 +29,8 @@ unsigned char knownWallH[MAZE_SIZE + 1] = {0};
 unsigned char knownWallV[MAZE_SIZE + 1] = {0};
 //歩数マップ
 unsigned short stepMap[MAZE_SIZE][MAZE_SIZE];
+//復路用マップ
+unsigned short stepMap_back[MAZE_SIZE][MAZE_SIZE];
 
 //壁情報の初期化関数
 void init_wall(void)
@@ -62,6 +64,7 @@ void init_stepMap(void)
 	//ゴール座標は0に設定
 	stepMap[GOAL_X_COODINATE][GOAL_Y_COODINATE] = 0;
 }
+
 
 //歩数マップ展開関数
 void update_stepMap(void)
@@ -163,6 +166,133 @@ char adachi_judge_nextdir(void)
 		if (minimum > stepMap[x_coordinate - 1][y_coordinate])
 		{
 			minimum = stepMap[x_coordinate - 1][y_coordinate];
+			nextdir = 3;
+		}
+	}
+	//判定結果
+	nextdir += 4;
+	nextdir -= m_dir;
+	if (nextdir >= 4)
+	{
+		nextdir -= 4;
+	}
+	return nextdir;
+}
+
+//復路歩数マップ初期化関数
+void init_stepMap_back(void) {
+	short i, j;
+	//全区画, 初期値は300
+	for (i = 0; i < MAZE_SIZE; i++)
+	{
+		for (j = 0; j < MAZE_SIZE; j++)
+		{
+			stepMap_back[i][j] = 300;
+		}
+	}
+	stepMap_back[0][0] = 0;
+}
+
+//復路歩数マップ展開関数
+void update_stepMap_back(void)
+{
+	unsigned short temp_stepMap_val;
+	char update_flg = 1;
+	short i, j;
+	//一番初めの展開元はゴール座標
+	temp_stepMap_val = stepMap_back[0][0];
+	//展開元をインクリメントしていき, 展開不可能(update_flgが立たない)になるまでループ
+	while (update_flg == 1)
+	{
+		update_flg = 0;
+		for (i = 0; i < MAZE_SIZE; i++)
+		{
+			for (j = 0; j < MAZE_SIZE; j++)
+			{
+				if (stepMap_back[i][j] == temp_stepMap_val)
+				{
+					//展開処理
+					//展開元の周囲で, 壁がなく, かつMAX値(未展開)の座標に展開できる
+					if (judge_wall(i, j, NORTH) == 0)
+					{
+						if (stepMap_back[i][j + 1] == 300)
+						{
+							stepMap_back[i][j + 1] = temp_stepMap_val + 1;
+							update_flg = 1;
+						}
+					}
+					if (judge_wall(i, j, EAST) == 0)
+					{
+						if (stepMap_back[i + 1][j] == 300)
+						{
+							stepMap_back[i + 1][j] = temp_stepMap_val + 1;
+							update_flg = 1;
+						}
+					}
+					if (judge_wall(i, j, SOUTH) == 0)
+					{
+						if (stepMap_back[i][j - 1] == 300)
+						{
+							stepMap_back[i][j - 1] = temp_stepMap_val + 1;
+							update_flg = 1;
+						}
+					}
+					if (judge_wall(i, j, WEST) == 0)
+					{
+						if (stepMap_back[i - 1][j] == 300)
+						{
+							stepMap_back[i - 1][j] = temp_stepMap_val + 1;
+							update_flg = 1;
+						}
+					}
+				}
+			}
+		}
+		temp_stepMap_val++; //展開元更新
+	}
+}
+
+//復路歩数マップを基に, 現在座標から見て最小歩数の方向を返す関数
+char adachi_judge_nextdir_back(void)
+{
+	unsigned short minimum;
+	char nextdir = 0;
+
+	minimum = stepMap_back[x_coordinate][y_coordinate]; //デフォルトの最小は現在座標
+	//歩数比較(壁なしを確認してから)	優先度: 北>東>南>西
+	//北
+	if (judge_wall(x_coordinate, y_coordinate, NORTH) == 0)
+	{
+		if (minimum > stepMap_back[x_coordinate][y_coordinate + 1])
+		{
+			minimum = stepMap_back[x_coordinate][y_coordinate + 1];
+			nextdir = 0;
+		}
+	}
+	//東
+	if (judge_wall(x_coordinate, y_coordinate, EAST) == 0)
+	{
+		if (minimum > stepMap_back[x_coordinate + 1][y_coordinate])
+		{
+			minimum = stepMap_back[x_coordinate + 1][y_coordinate];
+			nextdir = 1;
+		}
+	}
+	//南
+	if (judge_wall(x_coordinate, y_coordinate, SOUTH) == 0)
+	{
+		if (minimum > stepMap_back[x_coordinate][y_coordinate - 1])
+		{
+			minimum = stepMap_back[x_coordinate][y_coordinate - 1];
+			nextdir = 2;
+		}
+	}
+	//西
+	if (judge_wall(x_coordinate, y_coordinate, WEST) == 0)
+	{
+		if (minimum > stepMap_back[x_coordinate - 1][y_coordinate])
+		{
+			minimum = stepMap_back[x_coordinate - 1][y_coordinate];
 			nextdir = 3;
 		}
 	}
@@ -569,12 +699,21 @@ void update_coordinate(void)
 }
 
 //現在座標がゴールかどうか判定する関数
-char goal_judge(void)
+char goal_judge(char _trip)
 {
-	short i = 0;
-	//ゴール座標なら1を返す
-	if (x_coordinate == GOAL_X_COODINATE && y_coordinate == GOAL_Y_COODINATE)
-		return 1;
-	else
-		return 0;
+	//往路
+	if(_trip == OUTWAED) {
+		//ゴール座標なら1を返す
+		if (x_coordinate == GOAL_X_COODINATE && y_coordinate == GOAL_Y_COODINATE)
+			return 1;
+		else
+			return 0;
+	}
+	//復路
+	else {
+		if (x_coordinate == 0 && y_coordinate == 0)
+			return 1;
+		else
+			return 0;
+	}
 }

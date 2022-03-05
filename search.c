@@ -69,14 +69,15 @@ void adachi_method(void){
 	init_wall();		//壁情報初期化
 	init_stepMap();		//歩数マップ初期化
 	update_stepMap();	//歩数マップ作成
+	//最初は北向き
 	m_dir = 0;
-			//最初は北向き
+	//初期行動
 	turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
-	revision_back(0.2, 0.5, 3);
-	straight(0.045, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 0, -1);
-	turn(-90.0, TURN_OMEGA, 0, TURN_ALPHA);
-	revision_back(0.2, 0.5, 3);
-	straight(0.145, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1,0,-1);
+	doing_f_wall_revision();
+	turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
+	doing_f_wall_revision();
+	turn(180.0, TURN_OMEGA, 0, TURN_ALPHA);
+	straight(HALF_SECTION, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1,0);
 	
 	while(1){
 		update_coordinate();	//座標更新
@@ -90,7 +91,7 @@ void adachi_method(void){
 		
 		init_stepMap();		//歩数マップ初期化
 		update_stepMap();	//歩数マップ作成
-		if( goal_judge() == 1 )	break;		//ゴール到着判定
+		if( goal_judge(OUTWAED) == 1 )	break;		//ゴール到着判定
 		//進行方向判断
 		nextdir = adachi_judge_nextdir();
 		//直進
@@ -98,10 +99,10 @@ void adachi_method(void){
 		if( nextdir == 0 ){
 			//log_save(0,0,0,0);
 			if (before_flg == 1){
-				straight(SECTION, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 0,0,nextdir);
+				straight(SECTION, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 0,0);
 			}
 			else{
-			straight(SECTION, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1,0,nextdir);
+			straight(SECTION, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1,0);
 			}
 			
 			
@@ -112,19 +113,19 @@ void adachi_method(void){
 			//before_flg = 1;
 			//log_save(1,1,1,1);
 			// 両方壁ないとき壁制御入れるとバグるかも
-			straight(HALF_SECTION, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 1, nextdir);
+			straight(HALF_SECTION, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 1);
 			//straight(HALF_SECTION, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 0, nextdir);
-			wait_ms(1); //最初左車輪回らないなぜ
+			wait_ms(100); //最初左車輪回らないなぜ
 			turn(-90.0, TURN_OMEGA, 0, TURN_ALPHA);
 			//wait_ms(100);
-			straight(HALF_SECTION, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1,0,-1);
+			straight(HALF_SECTION, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1,0);
 			if(++m_dir > 3)	m_dir = 0;
 		}
 		//Uターン
 		if( nextdir == 2 ){
 			//log_save(2,2,2,2);
 			
-			straight(0.04, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 0,0,-1);
+			straight(0.04, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 0,0);
 			unsigned int left_val = abs((int)get_sen_value(LF_SEN) - REF_LF);
 			unsigned int right_val = abs((int)get_sen_value(RF_SEN) - REF_RF);
 			straight(0.04, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,1,nextdir);
@@ -137,7 +138,7 @@ void adachi_method(void){
 				
 				turn(-90.0, TURN_OMEGA, 0, TURN_ALPHA);
 				revision_back(0.3,0.5,5);
-				straight(0.045, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0,-1);
+				straight(0.045, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0);
 				wait_ms(100);
 				
 				turn(-90.0, TURN_OMEGA, 0, TURN_ALPHA);
@@ -148,7 +149,7 @@ void adachi_method(void){
 			else if(exist_r_wall == 1 && exist_f_wall == 1){
 				turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
 				revision_back(0.3,0.5,5);
-				straight(0.045, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0,-1);
+				straight(0.045, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0);
 				wait_ms(100);
 				
 				turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
@@ -167,7 +168,7 @@ void adachi_method(void){
 			}
 				
 				
-			straight(0.145, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1,0,-1);
+			straight(0.145, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1,0);
 			
 			//Uターンだから m_dir -= 2 
 			if(--m_dir < 0)	m_dir = 3;
@@ -183,24 +184,169 @@ void adachi_method(void){
 			//wait_ms(100);
 			turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
 			//wait_ms(100);
-			straight(HALF_SECTION, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1,0,-1);
+			straight(HALF_SECTION, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1,0);
 			if(--m_dir < 0)	m_dir = 3;
 		}
 	}
+
 	//終了行動
-	straight(0.06, SEARCH_SPEED, 0, SEARCH_ACCEL, 1,0,nextdir);
+	straight(HALF_SECTION, SEARCH_SPEED, 0, SEARCH_ACCEL, 1,0);
+	ledseg_0_interrupt(5);
+
+	//復路
+	init_stepMap_back();	  //復路歩数マップ初期化
+	update_stepMap_back(); //復路歩数マップ作成
+
+	//初期動作、前壁あればUターン無ければ直進
+	if(exist_f_wall == 1) {
+		turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
+		revision_back(0.2, 0.5, 3);
+		straight(0.045, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 0);
+		turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
+		revision_back(0.2, 0.5, 3);
+		straight(0.145, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1, 0);
+		// Uターンだから m_dir -= 2
+		if (--m_dir < 0) m_dir = 3;
+		if (--m_dir < 0) m_dir = 3;
+	} else {
+		straight(HALF_SECTION, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1, 0);
+	}
+
+	while (1)
+	{
+		update_coordinate();						 //座標更新
+		set_wall(x_coordinate, y_coordinate, m_dir); //壁判定, 格納
+
+		//現在座標の全ての壁を既知とする
+		add_knownWall(x_coordinate, y_coordinate, NORTH);
+		add_knownWall(x_coordinate, y_coordinate, EAST);
+		add_knownWall(x_coordinate, y_coordinate, SOUTH);
+		add_knownWall(x_coordinate, y_coordinate, WEST);
+
+		init_stepMap_back();	  //復路歩数マップ初期化
+		update_stepMap_back();  //復路歩数マップ作成
+		if (goal_judge(RETURN) == 1)
+			break; //ゴール到着判定
+		//進行方向判断
+		nextdir = adachi_judge_nextdir_back();
+		//直進
+		LED(nextdir);
+		if (nextdir == 0)
+		{
+			// log_save(0,0,0,0);
+			if (before_flg == 1)
+			{
+				straight(SECTION, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 0, 0);
+			}
+			else
+			{
+				straight(SECTION, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1, 0);
+			}
+		}
+		//右折
+		if (nextdir == 1)
+		{
+			// log_save(1,1,1,1);
+			// before_flg = 1;
+			// log_save(1,1,1,1);
+			//  両方壁ないとき壁制御入れるとバグるかも
+			straight(HALF_SECTION, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 1);
+			// straight(HALF_SECTION, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 0, nextdir);
+			wait_ms(100); //最初左車輪回らないなぜ
+			turn(-90.0, TURN_OMEGA, 0, TURN_ALPHA);
+			// wait_ms(100);
+			straight(HALF_SECTION, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1, 0);
+			if (++m_dir > 3)
+				m_dir = 0;
+		}
+		// Uターン
+		if (nextdir == 2)
+		{
+			// log_save(2,2,2,2);
+
+			straight(0.04, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 0, 0);
+			unsigned int left_val = abs((int)get_sen_value(LF_SEN) - REF_LF);
+			unsigned int right_val = abs((int)get_sen_value(RF_SEN) - REF_RF);
+			straight(0.04, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 1, nextdir);
+			// straight(0.04, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0,nextdir);
+			wait_ms(100);
+
+			//右回転
+			if ((left_val > right_val) && exist_l_wall == 1 && exist_f_wall == 1)
+			{
+
+				turn(-90.0, TURN_OMEGA, 0, TURN_ALPHA);
+				revision_back(0.3, 0.5, 5);
+				straight(0.045, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 0);
+				wait_ms(100);
+
+				turn(-90.0, TURN_OMEGA, 0, TURN_ALPHA);
+				revision_back(0.3, 0.5, 5);
+				wait_ms(100);
+			}
+			//左回転
+			else if (exist_r_wall == 1 && exist_f_wall == 1)
+			{
+				turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
+				revision_back(0.3, 0.5, 5);
+				straight(0.045, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 0);
+				wait_ms(100);
+
+				turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
+
+				revision_back(0.3, 0.5, 5);
+				wait_ms(100);
+			}
+			else if (exist_f_wall == 1)
+			{
+				turn(180.0, TURN_OMEGA, 0, TURN_ALPHA);
+				revision_back(0.3, 0.5, 5);
+			}
+			else
+			{
+				turn(180.0, TURN_OMEGA, 0, TURN_ALPHA);
+				revision_back(0.035, 0.5, 5);
+			}
+
+			straight(0.145, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1, 0);
+
+			// Uターンだから m_dir -= 2
+			if (--m_dir < 0)
+				m_dir = 3;
+			if (--m_dir < 0)
+				m_dir = 3;
+		}
+		//左折
+		if (nextdir == 3)
+		{
+			// log_save(3,3,3,3);
+			straight(HALF_SECTION, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 0, nextdir);
+			// wait_ms(100);
+			turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
+			// wait_ms(100);
+			straight(HALF_SECTION, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1, 0);
+			if (--m_dir < 0)
+				m_dir = 3;
+		}
+	}
+	//終了行動
+	straight(HALF_SECTION, SEARCH_SPEED, 0, SEARCH_ACCEL, 1, 1);
 	turn(180.0, TURN_OMEGA, 0, TURN_ALPHA);
-	//壁判定flg初期化
 	init_wall_exist_flg();
-	// log_save(9,9,9,9);
+	ledseg_0_interrupt(5);
 
 	generate_adachi_shortestRoute(); //最短経路パス生成
 }
 
 //生成したパスに沿って最短走行を行う関数
 void run_shortestRoute(void){
-	short i=0;
-	straight(0.048, FAST_SPEED,  FAST_SPEED, FAST_ACCEL, 1,0,-1);
+	turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
+	doing_f_wall_revision();
+	turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
+	doing_f_wall_revision();
+	turn(180.0, TURN_OMEGA, 0, TURN_ALPHA);
+	short i = 0;
+	//straight(0.048, FAST_SPEED,  FAST_SPEED, FAST_ACCEL, 1,0,-1);
 	while(1){
 		if( path[i] <= 15 ){		//直進
 			straight(SECTION*path[i], FAST_SPEED, 0, FAST_ACCEL, 1,0,-1);

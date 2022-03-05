@@ -667,21 +667,21 @@ void pid_speed(void){
 	
 	}
 	else {
-	//ë¨ìxPIåvéZ
-	pre_vel_error_p = vel_error_p;
-	vel_error_p = ( tar_vel - current_vel_ave );
-	vel_error_i += vel_error_p * DELTA_T;
-	vel_error_d = ( vel_error_p - pre_vel_error_p ) * DELTA_T;
-	
-	//äpë¨ìxPIåvéZ
-	pre_omega_error_p = omega_error_p;
-	omega_error_p = ( tar_omega - current_omega );
-	omega_error_i += omega_error_p * DELTA_T;
-	omega_error_d = ( omega_error_p - pre_omega_error_p ) * DELTA_T;
-	
-	//FBêßå‰ó åvéZ
-	r_control = ( VEL_KP * vel_error_p ) + ( VEL_KI * vel_error_i ) + ( VEL_KD * vel_error_d ) + ( ( OMEGA_KP / 100.0 ) * omega_error_p ) + ( ( OMEGA_KI / 100.0 ) * omega_error_i ) + ( ( OMEGA_KD / 100.0 ) * omega_error_d );
-	l_control = ( VEL_KP * vel_error_p ) + ( VEL_KI * vel_error_i ) + ( VEL_KD * vel_error_d ) - ( ( OMEGA_KP / 100.0 ) * omega_error_p ) - ( ( OMEGA_KI / 100.0 ) * omega_error_i ) - ( ( OMEGA_KD / 100.0 ) * omega_error_d );
+		//ë¨ìxPIåvéZ
+			pre_vel_error_p = vel_error_p;
+			vel_error_p = ( tar_vel - current_vel_ave );
+			vel_error_i += vel_error_p * DELTA_T;
+			vel_error_d = ( vel_error_p - pre_vel_error_p ) * DELTA_T;
+		
+		//äpë¨ìxPIåvéZ
+		pre_omega_error_p = omega_error_p;
+		omega_error_p = ( tar_omega - current_omega );
+		omega_error_i += omega_error_p * DELTA_T;
+		omega_error_d = ( omega_error_p - pre_omega_error_p ) * DELTA_T;
+		
+		//FBêßå‰ó åvéZ
+		r_control = ( VEL_KP * vel_error_p ) + ( VEL_KI * vel_error_i ) + ( VEL_KD * vel_error_d ) + ( ( OMEGA_KP / 100.0 ) * omega_error_p ) + ( ( OMEGA_KI / 100.0 ) * omega_error_i ) + ( ( OMEGA_KD / 100.0 ) * omega_error_d );
+		l_control = ( VEL_KP * vel_error_p ) + ( VEL_KI * vel_error_i ) + ( VEL_KD * vel_error_d ) - ( ( OMEGA_KP / 100.0 ) * omega_error_p ) - ( ( OMEGA_KI / 100.0 ) * omega_error_i ) - ( ( OMEGA_KD / 100.0 ) * omega_error_d );
 	}
 	if(get_time(TYPE_MYMS) % 2 == 0) {
 		//log_save((short)(current_omega), (short)(tar_omega),(short)(current_angle),(short)(angle));

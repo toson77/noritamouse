@@ -736,12 +736,12 @@ void pid_speed(void){
 		short tmp_duty_r = (V_r / V_bat) * 100;
 		short tmp_duty_l = (V_l / V_bat) * 100;
 		if (tmp_duty_l > 10) {
-			duty_l = 20;
+			duty_l = 30;
 		}else{
 			duty_l = tmp_duty_l;
 		}
 		if(tmp_duty_r > 10) {
-			duty_r = 20;
+			duty_r = 30;
 		}else{
 			duty_r = tmp_duty_r;
 		}

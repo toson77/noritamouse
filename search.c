@@ -199,12 +199,20 @@ void adachi_method(void){
 
 	//初期動作、前壁あればUターン無ければ直進
 	if(exist_f_wall == 1) {
-		turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
-		revision_back(0.2, 0.5, 3);
-		straight(0.045, SEARCH_SPEED, 0, SEARCH_ACCEL, 0, 0);
-		turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
-		revision_back(0.2, 0.5, 3);
-		straight(0.145, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1, 0);
+		if(exist_r_wall == 1){
+			turn(-90.0, TURN_OMEGA, 0, TURN_ALPHA);
+			doing_f_wall_revision();
+			turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
+			doing_f_wall_revision();
+			turn(180.0, TURN_OMEGA, 0, TURN_ALPHA);
+		}else if(exist_l_wall == 1) {
+			turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
+			doing_f_wall_revision();
+			turn(-90.0, TURN_OMEGA, 0, TURN_ALPHA);
+			doing_f_wall_revision();
+			turn(180.0, TURN_OMEGA, 0, TURN_ALPHA);
+		}
+		straight(HALF_SECTION, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1, 0);
 		// Uターンだから m_dir -= 2
 		if (--m_dir < 0) m_dir = 3;
 		if (--m_dir < 0) m_dir = 3;

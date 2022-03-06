@@ -9,6 +9,7 @@ void control_speed(void);
 void pid_speed(void);
 void control_wall(void);
 void f_wall_control(void);
+void f_wall_test(void);
 void doing_f_wall_revision(void);
 void change_motor_speed(void);
 void reset_run_status(void);

@@ -40,9 +40,7 @@ void abort(void);
 #endif
 
 void straight_wall_on_test() {
-	straight(0.048, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1, 0, -1);
-	straight(SECTION, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1, 0, -1);
-	straight(SECTION * 2, SEARCH_SPEED, 0, SEARCH_ACCEL, 1, 0, -1);
+	straight(SECTION * 3, SEARCH_SPEED, 0, SEARCH_ACCEL, 1, 0);
 }
 void turn_mini_test() {
 	straight(0.045, 0.3, 0, 1.0, 1,0,-1);
@@ -119,7 +117,7 @@ void main(void)
 			case 4:
 				if((int)get_sen_value(LF_SEN)+(int)get_sen_value(LS_SEN)+(int)get_sen_value(RS_SEN)+(int)get_sen_value(RF_SEN) > SEN_DICISION) {
 					ledseg_4_interrupt(INTERRUPT_COUNT); //LED“_–Å
-					doing_f_wall_revision();
+					f_wall_test();
 					wait_ms(500);
 				}
 				
@@ -162,7 +160,7 @@ void main(void)
 				if((int)get_sen_value(LF_SEN)+(int)get_sen_value(LS_SEN)+(int)get_sen_value(RS_SEN)+(int)get_sen_value(RF_SEN) > SEN_DICISION) {
 					ledseg_7_interrupt(INTERRUPT_COUNT); //LED“_–Å
 					wait_sec(1);
-					straight(SECTION*3+0.045, 0.3, 0, 1.0, 1,0,-1);
+					straight(SECTION*17, 0.3, 0, 1.0, 1,0,-1);
 					wait_ms(500);
 					turn(90.0, 300.0, 0, 500.0);
 					//revision_back(0.3);

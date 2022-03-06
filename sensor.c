@@ -11,6 +11,8 @@ static signed int rs_sen_ledon_val, rs_sen_ledoff_val, rs_sen_val;
 
 //バッテリー電圧値
 static float battery_ad_value;
+//移動平均フィルタバッファサイズ
+#define SEN_BUF_SIZE 3
 
 //指定した壁センサの値を保存する関数
 void set_sen_value(char position, char led_state, int ad_value){
@@ -56,13 +58,87 @@ void set_sen_value(char position, char led_state, int ad_value){
 	}
 }
 
+//移動平均計算関数
+//右壁
+static float calc_rf_sen_moving_ave(short value)
+{
+	static short i = 0;					  //リングバッファのポインタ
+	static short buf[SEN_BUF_SIZE] = {0}; //リングバッファ
+	static float sum = 0;				  //合計値
+
+	sum -= buf[i];	//最古の値を合計値から引く
+	buf[i] = value; //最古の値を最新の値に更新
+	sum += buf[i];	//最新の値を合計値に加える
+
+	if (++i == SEN_BUF_SIZE)
+	{
+		i = 0;
+	} //次のためにリングバッファのポインタを進める
+
+	return (sum / SEN_BUF_SIZE); // ( 直近N個の合計/個数 )
+}
+//左壁
+static float calc_lf_sen_moving_ave(short value)
+{
+	static short i = 0;					  //リングバッファのポインタ
+	static short buf[SEN_BUF_SIZE] = {0}; //リングバッファ
+	static float sum = 0;				  //合計値
+
+	sum -= buf[i];	//最古の値を合計値から引く
+	buf[i] = value; //最古の値を最新の値に更新
+	sum += buf[i];	//最新の値を合計値に加える
+
+	if (++i == SEN_BUF_SIZE)
+	{
+		i = 0;
+	} //次のためにリングバッファのポインタを進める
+
+	return (sum / SEN_BUF_SIZE); // ( 直近N個の合計/個数 )
+}
+//左前壁
+static float calc_ls_sen_moving_ave(short value)
+{
+	static short i = 0;					  //リングバッファのポインタ
+	static short buf[SEN_BUF_SIZE] = {0}; //リングバッファ
+	static float sum = 0;				  //合計値
+
+	sum -= buf[i];	//最古の値を合計値から引く
+	buf[i] = value; //最古の値を最新の値に更新
+	sum += buf[i];	//最新の値を合計値に加える
+
+	if (++i == SEN_BUF_SIZE)
+	{
+		i = 0;
+	} //次のためにリングバッファのポインタを進める
+
+	return (sum / SEN_BUF_SIZE); // ( 直近N個の合計/個数 )
+}
+//左前壁
+static float calc_rs_sen_moving_ave(short value)
+{
+	static short i = 0;					  //リングバッファのポインタ
+	static short buf[SEN_BUF_SIZE] = {0}; //リングバッファ
+	static float sum = 0;				  //合計値
+
+	sum -= buf[i];	//最古の値を合計値から引く
+	buf[i] = value; //最古の値を最新の値に更新
+	sum += buf[i];	//最新の値を合計値に加える
+
+	if (++i == SEN_BUF_SIZE)
+	{
+		i = 0;
+	} //次のためにリングバッファのポインタを進める
+
+	return (sum / SEN_BUF_SIZE); // ( 直近N個の合計/個数 )
+}
+
 //指定した壁センサの, ( 点灯時の値 - 消灯時の値 ) を計算し, 保存する関数
 void calc_sen_value(char position){
 	int before_lf, before_ls, before_rs, before_rf;
-	before_lf = lf_sen_val;
-	before_ls = ls_sen_val;
-	before_rs = rs_sen_val;
-	before_rf = rf_sen_val;
+	before_lf = calc_lf_sen_moving_ave(lf_sen_val);
+	before_ls = calc_ls_sen_moving_ave(ls_sen_val);
+	before_rs = calc_rs_sen_moving_ave(rs_sen_val);
+	before_rf = calc_rf_sen_moving_ave(rf_sen_val);
 	switch(position){
 		case LF_SEN:
 			lf_sen_val = (lf_sen_ledon_val - lf_sen_ledoff_val + before_lf)/2;
@@ -85,6 +161,7 @@ void calc_sen_value(char position){
 	}
 	
 }
+
 
 //差分を取ったセンサ値を返す関数
 float get_sen_value(char position){

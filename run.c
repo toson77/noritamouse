@@ -798,6 +798,15 @@ void doing_f_wall_revision(void) {
 	speed_control_flg = 0;
 	MOT_STBY = 0;
 }
+void f_wall_test(void) {
+	MOT_STBY = 1;
+	f_wall_control_flg = 1;
+	speed_control_flg = 1;
+	wait_sec(20);
+	f_wall_control_flg = 0;
+	speed_control_flg = 0;
+	MOT_STBY = 0;
+}
 
 //ëOï«êßå‰(1msäÑÇËçûÇ›)
 void f_wall_control(void) {

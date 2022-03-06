@@ -118,7 +118,7 @@ void adachi_method(void){
 			wait_ms(100); //最初左車輪回らないなぜ
 			turn(-90.0, TURN_OMEGA, 0, TURN_ALPHA);
 			//wait_ms(100);
-			straight(HALF_SECTION, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1,0);
+			straight(HALF_SECTION, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 0,0);
 			if(++m_dir > 3)	m_dir = 0;
 		}
 		//Uターン
@@ -154,7 +154,7 @@ void adachi_method(void){
 			}
 				
 				
-			straight(HALF_SECTION, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1,0);
+			straight(HALF_SECTION, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 0,0);
 			
 			//Uターンだから m_dir -= 2 
 			if(--m_dir < 0)	m_dir = 3;
@@ -170,7 +170,7 @@ void adachi_method(void){
 			//wait_ms(100);
 			turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
 			//wait_ms(100);
-			straight(HALF_SECTION, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1,0);
+			straight(HALF_SECTION, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 0,0);
 			if(--m_dir < 0)	m_dir = 3;
 		}
 	}
@@ -245,7 +245,7 @@ void adachi_method(void){
 			wait_ms(100); //最初左車輪回らないなぜ
 			turn(-90.0, TURN_OMEGA, 0, TURN_ALPHA);
 			// wait_ms(100);
-			straight(HALF_SECTION, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1, 0);
+			straight(HALF_SECTION, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 0, 0);
 			if (++m_dir > 3)
 				m_dir = 0;
 		}
@@ -283,7 +283,7 @@ void adachi_method(void){
 				turn(180.0, TURN_OMEGA, 0, TURN_ALPHA);
 			}
 
-			straight(HALF_SECTION, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1, 0);
+			straight(HALF_SECTION, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 0, 0);
 
 			// Uターンだから m_dir -= 2
 			if (--m_dir < 0)
@@ -299,7 +299,7 @@ void adachi_method(void){
 			// wait_ms(100);
 			turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
 			// wait_ms(100);
-			straight(HALF_SECTION, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 1, 0);
+			straight(HALF_SECTION, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCEL, 0, 0);
 			if (--m_dir < 0)
 				m_dir = 3;
 		}

@@ -8,8 +8,8 @@
 
 #define MAZE_SIZE 16
 // start 0 0
-#define GOAL_X_COODINATE 3
-#define GOAL_Y_COODINATE 3
+#define GOAL_X_COODINATE 7
+#define GOAL_Y_COODINATE 7
 
 //ƒOƒ[ƒoƒ‹•Ï”--------------
 char x_coordinate = 0;

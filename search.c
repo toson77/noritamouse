@@ -138,6 +138,7 @@ void adachi_method(void){
 				
 				turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
 				doing_f_wall_revision();
+				wait_ms(100);
 				turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
 				wait_ms(100);
 			}
@@ -145,6 +146,7 @@ void adachi_method(void){
 			else if(exist_r_wall == 1 && exist_f_wall == 1){
 				turn(-90.0, TURN_OMEGA, 0, TURN_ALPHA);
 				doing_f_wall_revision();
+				wait_ms(100);
 				turn(-90.0, TURN_OMEGA, 0, TURN_ALPHA);
 				wait_ms(100);
 				
@@ -271,6 +273,7 @@ void adachi_method(void){
 
 				turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
 				doing_f_wall_revision();
+				wait_ms(100);
 				turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
 				wait_ms(100);
 			}
@@ -279,6 +282,7 @@ void adachi_method(void){
 			{
 				turn(-90.0, TURN_OMEGA, 0, TURN_ALPHA);
 				doing_f_wall_revision();
+				wait_ms(100);
 				turn(-90.0, TURN_OMEGA, 0, TURN_ALPHA);
 				wait_ms(100);
 			}
@@ -401,6 +405,7 @@ void adachi_method_test(void)
 
 				turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
 				doing_f_wall_revision();
+				wait_ms(100);
 				turn(90.0, TURN_OMEGA, 0, TURN_ALPHA);
 				wait_ms(100);
 			}
@@ -409,6 +414,7 @@ void adachi_method_test(void)
 			{
 				turn(-90.0, TURN_OMEGA, 0, TURN_ALPHA);
 				doing_f_wall_revision();
+				wait_ms(100);
 				turn(-90.0, TURN_OMEGA, 0, TURN_ALPHA);
 				wait_ms(100);
 			}

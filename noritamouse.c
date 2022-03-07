@@ -81,13 +81,12 @@ void main(void)
 				if((int)get_sen_value(LF_SEN)+(int)get_sen_value(LS_SEN)+(int)get_sen_value(RS_SEN)+(int)get_sen_value(RF_SEN) > SEN_DICISION) {
 					ledseg_1_interrupt(INTERRUPT_COUNT); //LED点滅
 					wait_sec(1);
-					/*
+					
 					adachi_method();
 					wait_sec(2);
 					run_shortestRoute();
-					*/
 					
-					adachi_method_test();
+					//adachi_method_test();
 				}
 				break;
 			
@@ -131,8 +130,11 @@ void main(void)
 				if((int)get_sen_value(LF_SEN)+(int)get_sen_value(LS_SEN)+(int)get_sen_value(RS_SEN)+(int)get_sen_value(RF_SEN) > SEN_DICISION) {
 					ledseg_5_interrupt(INTERRUPT_COUNT); //LED点滅
 					wait_sec(1);
+					//all_led_off();
+
 					while(1) {
 						adc_test_all();
+						//led_interrupt_test();
 						if(get_current_enc_velocity(LEFT_ENCODER) > SPEED_DICISION) {
 							ledseg_5_interrupt(INTERRUPT_COUNT); //LED点滅
 							break;
@@ -163,19 +165,9 @@ void main(void)
 				if((int)get_sen_value(LF_SEN)+(int)get_sen_value(LS_SEN)+(int)get_sen_value(RS_SEN)+(int)get_sen_value(RF_SEN) > SEN_DICISION) {
 					ledseg_7_interrupt(INTERRUPT_COUNT); //LED点滅
 					wait_sec(1);
-					straight(SECTION*17, 0.3, 0, 1.0, 1,0,-1);
-					wait_ms(500);
-					turn(90.0, 300.0, 0, 500.0);
-					//revision_back(0.3);
-					straight(0.05, SEARCH_SPEED, 0, SEARCH_ACCEL, 0,0,-1);
-					wait_ms(500);
-				
-					turn(90.0, 300.0, 0, 500.0);
-				
-					//revision_back(0.3);
-					wait_ms(100);
-				
-					straight(0.135, SEARCH_SPEED, 0, SEARCH_ACCEL, 1,0,-1);
+					all_led_off();
+					wait_sec(30);
+					
 				}
 				
 				break;

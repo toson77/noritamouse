@@ -97,10 +97,19 @@ void straight(float _length, float _top_speed, float _end_speed, float _accel, c
 	short tmp_wall_control_flg = _wall_control;
 	turn_flg = 0;
 	forward_wall_stop_flg = _forward_wall;
-	
-	
-	//初速度計測
-	start_speed = current_vel_ave;
+	//壁なかったら壁制御オフ
+	if (exist_l_wall == 0 && exist_r_wall == 0) {
+		wall_control_flg = 0;
+		tmp_wall_control_flg = 0;
+	}
+	//前壁あるときも壁制御オフ
+	if(exist_f_wall == 1) {
+		wall_control_flg = 0;
+		tmp_wall_control_flg = 0;
+	}
+
+		//初速度計測
+		start_speed = current_vel_ave;
 	//v1^2 - v0^2 = 2ax より機体加速, 減速可能距離を算出
 	accel_length = ( ( _top_speed + start_speed ) * ( _top_speed - start_speed ) ) / ( 2.0 * _accel );
 	brake_length = ( ( _top_speed + _end_speed ) * ( _top_speed - _end_speed ) ) / ( 2.0 * _accel );
@@ -211,11 +220,14 @@ void straight(float _length, float _top_speed, float _end_speed, float _accel, c
 	//停止処理
 	if( _end_speed > -0.0009 && _end_speed < 0.0009 ){
 		if(exist_f_wall == 1){
+			/*
 			//前壁補正オン
 			f_wall_control_flg = 1;
 			wait_ms(500);
 			//前壁補正オフ
 			f_wall_control_flg = 0;
+			*/
+			doing_f_wall_revision();
 		}
 		//スピード制御OFF
 		speed_control_flg = 0;
@@ -590,7 +602,7 @@ void control_speed(void){
 		//log_save((short)(current_vel_r*1000), (short)(current_vel_l*1000),(short)(tar_vel*1000),(short)(angle));
 		//log_save((short)(current_dis_ave*1000), (short)(current_vel_ave*1000), (short)(tar_vel*1000), (short)(length*1000));
 		//log_save(1,1);
-		log_save(get_sen_value(LF_SEN)*1.5, get_sen_value(LS_SEN), get_sen_value(RS_SEN), get_sen_value(RF_SEN));
+		log_save(get_sen_value(LF_SEN), get_sen_value(LS_SEN), get_sen_value(RS_SEN), get_sen_value(RF_SEN));
 	}
 	//log_save((short)(tar_omega));
 	//log_save((short)(current_dis_ave*1000.0));
@@ -615,11 +627,13 @@ void pid_speed(void){
 	//速度制御フラグが0ならreturn
 	if( speed_control_flg == 0 ) {
 		vel_error_p=0.0; 
-		pre_vel_error_p=0.0;
 		vel_error_i = 0.0;
-		omega_error_i = 0.0;
-		omega_error_p=0.0; 
+		vel_error_d = 0.0;
+		pre_vel_error_p=0.0;
 		pre_omega_error_p=0;
+		omega_error_p = 0;
+		omega_error_i = 0.0;
+		omega_error_d=0.0; 
 		
 		return;
 	}
@@ -791,12 +805,36 @@ void control_wall(void){
 
 void doing_f_wall_revision(void) {
 	MOT_STBY = 1;
-	f_wall_control_flg = 1;
 	speed_control_flg = 1;
+
+	while (get_sen_value(LS_SEN) + get_sen_value(RS_SEN) < FRONT_WALL_STOPL + FRONT_WALL_STOPR - 10){
+		angle = 0;
+		target_omega = 0;
+		alpha = 0;
+		target_speed = 0.15;
+		accel = SEARCH_ACCEL;
+	}
+	while (get_sen_value(LS_SEN) + get_sen_value(RS_SEN) > FRONT_WALL_STOPL + FRONT_WALL_STOPR + 10)
+	{
+		angle = 0;
+		target_omega = 0;
+		alpha = 0;
+		target_speed = -0.15;
+		accel = SEARCH_ACCEL;
+	}
+	speed_control_flg = 0;
+	reset_run_status();
+	speed_control_flg = 1;
+	f_wall_control_flg = 1;
 	wait_ms(700);
 	f_wall_control_flg = 0;
 	speed_control_flg = 0;
+	direction_r_mot(MOT_BRAKE);
+	direction_l_mot(MOT_BRAKE);
+	duty_r = 0;
+	duty_l = 0;
 	MOT_STBY = 0;
+	reset_run_status();
 }
 void f_wall_test(void) {
 	MOT_STBY = 1;

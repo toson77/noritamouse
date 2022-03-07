@@ -259,6 +259,20 @@ void ledseg_all_off(void) {
 	 LED_7SEG_6 = 1;
 	 LED_7SEG_7 = 1;
 }
+void all_led_off(void) {
+	LED_7SEG_1 = 1;
+	LED_7SEG_2 = 1;
+	LED_7SEG_3 = 1;
+	LED_7SEG_4 = 1;
+	LED_7SEG_5 = 1;
+	LED_7SEG_6 = 1;
+	LED_7SEG_7 = 1;
+	LED_1 = 1;
+	LED_2 = 1;
+	DEBUG_LED_1 = 1;
+	DEBUG_LED_2 = 1;
+	DEBUG_LED_3 = 1;
+}
 
 void LED(short mode) {
 	//init

@@ -143,6 +143,9 @@ void adc_test_all(void){
 		(int)get_sen_value(RS_SEN), (int)get_sen_value(RF_SEN), 
 		(int)get_time(TYPE_SEC));
 }
+void led_interrupt_test(void) {
+	sci_printf("LFON=%d LFOFF=%d RFON=%d RFOFF=%d \r\n", (int)get_sen_on_value(LF_SEN), (int)get_sen_off_value(LF_SEN), (int)get_sen_on_value(RF_SEN), (int)get_sen_off_value(RF_SEN));
+}
 
 void encoder_test1(void){
 	sci_printf("R_ENC = %d L_ENC = %d \r\n",ENC_PULSE_COUNT_R, ENC_PULSE_COUNT_L);

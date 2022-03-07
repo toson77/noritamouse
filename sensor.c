@@ -162,13 +162,65 @@ void calc_sen_value(char position){
 	
 }
 
+float get_sen_on_value(char position) {
+	float temp_val = 0;
+	switch (position)
+	{
+	case LF_SEN:
+		temp_val = lf_sen_ledon_val;
+		break;
+
+	case LS_SEN:
+		temp_val = ls_sen_ledon_val;
+		break;
+
+	case RS_SEN:
+		temp_val = rs_sen_ledon_val;
+		break;
+
+	case RF_SEN:
+		temp_val = rf_sen_ledon_val;
+		break;
+
+	default:
+		break;
+	}
+	return temp_val;
+}
+float get_sen_off_value(char position)
+{
+	float temp_val = 0;
+	switch (position)
+	{
+	case LF_SEN:
+		temp_val = lf_sen_ledoff_val;
+		break;
+
+	case LS_SEN:
+		temp_val = ls_sen_ledoff_val;
+		break;
+
+	case RS_SEN:
+		temp_val = rs_sen_ledoff_val;
+		break;
+
+	case RF_SEN:
+		temp_val = rf_sen_ledoff_val;
+		break;
+
+	default:
+		break;
+	}
+	return temp_val;
+}
 
 //差分を取ったセンサ値を返す関数
 float get_sen_value(char position){
 	float temp_val = 0;
 	switch(position){
 		case LF_SEN:
-			temp_val = lf_sen_val;
+			//なるべくRFと値を合わせるため
+			temp_val = lf_sen_val - 200;
 		break;
 		
 		case LS_SEN:

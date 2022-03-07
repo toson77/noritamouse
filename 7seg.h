@@ -22,6 +22,7 @@ void ledseg_9_ON(void);
 void ledseg_9_OFF(void);
 void ledseg_x_ON(void);
 void ledseg_x_OFF(void);
+void all_led_off(void);
 void ledseg_x_interrupt(short count);
 void ledseg_0_interrupt(short count);
 void ledseg_1_interrupt(short count);

@@ -6,8 +6,11 @@ void calc_sen_value(char position);
 float get_sen_value(char position);
 void set_battery_value(int ad_value);
 float get_battery_voltage(void);
+float get_sen_off_value(char position);
+float get_sen_on_value(char position);
 
-enum SEN_POSITION{
+enum SEN_POSITION
+{
 	LF_SEN,
 	LS_SEN,
 	RS_SEN,

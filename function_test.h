@@ -8,7 +8,7 @@ void move_forward_specified_duty(short duty);
 void move_backward_specified_duty(short duty);
 void rotate_clockwise_specified_duty(short duty);
 void rotate_anticlockwise_specified_duty(short duty);
-
+void led_interrupt_test(void);
 void encoder_test1(void);
 void encoder_test2(void);
 void encoder_test3(void);

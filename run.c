@@ -582,15 +582,15 @@ void control_speed(void){
 	
 	//é¿ç€ÇÃäpìx
 	current_angle += current_omega / 1000.0;
-	//log_save((short)(get_sen_value(LS_SEN) + get_sen_value(RS_SEN)));
 	//log_save((short)(current_vel_ave*1000.0));
 	//log_save((short)(tar_vel*1000.0));
-	if(get_time(TYPE_MYMS) % 2 == 0) {
+	if(get_time(TYPE_MYMS) % 4 == 0) {
+		//log_save((short)(get_sen_value(LS_SEN) + get_sen_value(RS_SEN)));
 		//log_save((short)(current_omega), (short)(tar_omega),(short)(current_angle),(short)(angle));
 		//log_save((short)(current_vel_r*1000), (short)(current_vel_l*1000),(short)(tar_vel*1000),(short)(angle));
-		log_save((short)(current_dis_ave*1000), (short)(current_vel_ave*1000), (short)(tar_vel*1000), (short)(length*1000));
+		//log_save((short)(current_dis_ave*1000), (short)(current_vel_ave*1000), (short)(tar_vel*1000), (short)(length*1000));
 		//log_save(1,1);
-		
+		log_save(get_sen_value(LF_SEN)*1.5, get_sen_value(LS_SEN), get_sen_value(RS_SEN), get_sen_value(RF_SEN));
 	}
 	//log_save((short)(tar_omega));
 	//log_save((short)(current_dis_ave*1000.0));

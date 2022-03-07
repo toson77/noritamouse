@@ -23,6 +23,6 @@ void print_run_log(void){
 	short i;
 	for(i=0;i<LOG_SIZE;i++){
 		
-		sci_printf("%l,%l,%l,%l\r\n", run_log[0][i],run_log[1][i], run_log[2][i],run_log[3][i]);
+		sci_printf("%l,%l,%l,%l\r\n",run_log[0][i],run_log[1][i], run_log[2][i],run_log[3][i]);
 	}
 }

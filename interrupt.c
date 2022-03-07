@@ -206,7 +206,7 @@ void wait_ms(unsigned int ms){
 
 //バッテリー低下強制停止
 void battery_low_notification() {
-	if(get_battery_voltage() < 6.6) {
+	if(get_battery_voltage() < 6.5) {
 		reset_run_status();
 		direction_l_mot(MOT_STOP);
 		direction_r_mot(MOT_STOP);

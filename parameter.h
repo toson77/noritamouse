@@ -43,7 +43,7 @@
 #define LEFT_THRESHOLD 100  //左壁センサ閾値
 #define RIGHT_THRESHOLD 190 //右壁センサ閾値
 //#define FRONT_THRESHOLD 550 //前壁センサ閾値
-#define FRONT_THRESHOLD 600 //前壁センサ閾値
+#define FRONT_THRESHOLD 480 //前壁センサ閾値
 #define FRONT_WALL_STOPL 2500 //前壁補正目標値
 #define FRONT_WALL_STOPR 1810 //前壁補正目標値
 

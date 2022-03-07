@@ -81,10 +81,13 @@ void main(void)
 				if((int)get_sen_value(LF_SEN)+(int)get_sen_value(LS_SEN)+(int)get_sen_value(RS_SEN)+(int)get_sen_value(RF_SEN) > SEN_DICISION) {
 					ledseg_1_interrupt(INTERRUPT_COUNT); //LED“_–Å
 					wait_sec(1);
+					/*
 					adachi_method();
 					wait_sec(2);
 					run_shortestRoute();
-
+					*/
+					
+					adachi_method_test();
 				}
 				break;
 			
@@ -195,8 +198,8 @@ void main(void)
 				if((int)get_sen_value(LF_SEN)+(int)get_sen_value(LS_SEN)+(int)get_sen_value(RS_SEN)+(int)get_sen_value(RF_SEN) > SEN_DICISION) {
 					ledseg_9_interrupt(INTERRUPT_COUNT); //LED“_–Å
 					wait_sec(1);
+					print_wall();
 					print_run_log();
-					//print_wall();
 					
 				}
 				

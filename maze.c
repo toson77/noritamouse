@@ -25,8 +25,8 @@ char exist_l_wall=0, exist_r_wall=0, exist_f_wall=0;
 unsigned short wallH[MAZE_SIZE + 1] = {0};
 unsigned short wallV[MAZE_SIZE + 1] = {0};
 //水平方向と垂直方向の既知の壁
-unsigned char knownWallH[MAZE_SIZE + 1] = {0};
-unsigned char knownWallV[MAZE_SIZE + 1] = {0};
+unsigned short knownWallH[MAZE_SIZE + 1] = {0};
+unsigned short knownWallV[MAZE_SIZE + 1] = {0};
 //歩数マップ
 unsigned short stepMap[MAZE_SIZE][MAZE_SIZE];
 //復路用マップ
@@ -86,7 +86,7 @@ void update_stepMap(void)
 				{
 					//展開処理
 					//展開元の周囲で, 壁がなく, かつMAX値(未展開)の座標に展開できる
-					if (judge_wall(i, j, NORTH) == 0)
+					if (judge_wall(i, j, NORTH) == 0 && j < MAZE_SIZE - 1)
 					{
 						if (stepMap[i][j + 1] == 300)
 						{
@@ -94,7 +94,7 @@ void update_stepMap(void)
 							update_flg = 1;
 						}
 					}
-					if (judge_wall(i, j, EAST) == 0)
+					if (judge_wall(i, j, EAST) == 0 && i < MAZE_SIZE - 1)
 					{
 						if (stepMap[i + 1][j] == 300)
 						{
@@ -102,7 +102,7 @@ void update_stepMap(void)
 							update_flg = 1;
 						}
 					}
-					if (judge_wall(i, j, SOUTH) == 0)
+					if (judge_wall(i, j, SOUTH) == 0 && j > 0)
 					{
 						if (stepMap[i][j - 1] == 300)
 						{
@@ -110,7 +110,7 @@ void update_stepMap(void)
 							update_flg = 1;
 						}
 					}
-					if (judge_wall(i, j, WEST) == 0)
+					if (judge_wall(i, j, WEST) == 0 && i > 0)
 					{
 						if (stepMap[i - 1][j] == 300)
 						{
@@ -130,6 +130,7 @@ char adachi_judge_nextdir(void)
 {
 	unsigned short minimum;
 	char nextdir = 0;
+	char success_flg = 0;
 
 	minimum = stepMap[x_coordinate][y_coordinate]; //デフォルトの最小は現在座標
 	//歩数比較(壁なしを確認してから)	優先度: 北>東>南>西
@@ -140,6 +141,7 @@ char adachi_judge_nextdir(void)
 		{
 			minimum = stepMap[x_coordinate][y_coordinate + 1];
 			nextdir = 0;
+			success_flg = 1;
 		}
 	}
 	//東
@@ -149,6 +151,7 @@ char adachi_judge_nextdir(void)
 		{
 			minimum = stepMap[x_coordinate + 1][y_coordinate];
 			nextdir = 1;
+			success_flg = 1;
 		}
 	}
 	//南
@@ -158,6 +161,7 @@ char adachi_judge_nextdir(void)
 		{
 			minimum = stepMap[x_coordinate][y_coordinate - 1];
 			nextdir = 2;
+			success_flg = 1;
 		}
 	}
 	//西
@@ -166,6 +170,27 @@ char adachi_judge_nextdir(void)
 		if (minimum > stepMap[x_coordinate - 1][y_coordinate])
 		{
 			minimum = stepMap[x_coordinate - 1][y_coordinate];
+			nextdir = 3;
+			success_flg = 1;
+		}
+	}
+	//等高線谷の場合
+	if (success_flg == 0)
+	{
+		if (judge_wall(x_coordinate, y_coordinate, NORTH) == 0)
+		{
+			nextdir = 0;
+		}
+		else if (judge_wall(x_coordinate, y_coordinate, EAST) == 0)
+		{
+			nextdir = 1;
+		}
+		else if (judge_wall(x_coordinate, y_coordinate, SOUTH) == 0)
+		{
+			nextdir = 2;
+		}
+		else
+		{
 			nextdir = 3;
 		}
 	}
@@ -215,13 +240,13 @@ void update_stepMap_back(void)
 					//展開元の周囲で, 壁がなく, かつMAX値(未展開)の座標に展開できる
 					if (judge_wall(i, j, NORTH) == 0)
 					{
-						if (stepMap_back[i][j + 1] == 300)
+						if (stepMap_back[i][j + 1] == 300 && j < MAZE_SIZE - 1)
 						{
 							stepMap_back[i][j + 1] = temp_stepMap_val + 1;
 							update_flg = 1;
 						}
 					}
-					if (judge_wall(i, j, EAST) == 0)
+					if (judge_wall(i, j, EAST) == 0 && i < MAZE_SIZE - 1)
 					{
 						if (stepMap_back[i + 1][j] == 300)
 						{
@@ -229,7 +254,7 @@ void update_stepMap_back(void)
 							update_flg = 1;
 						}
 					}
-					if (judge_wall(i, j, SOUTH) == 0)
+					if (judge_wall(i, j, SOUTH) == 0 && j > 0)
 					{
 						if (stepMap_back[i][j - 1] == 300)
 						{
@@ -237,7 +262,7 @@ void update_stepMap_back(void)
 							update_flg = 1;
 						}
 					}
-					if (judge_wall(i, j, WEST) == 0)
+					if (judge_wall(i, j, WEST) == 0 && i > 0)
 					{
 						if (stepMap_back[i - 1][j] == 300)
 						{
@@ -257,7 +282,7 @@ char adachi_judge_nextdir_back(void)
 {
 	unsigned short minimum;
 	char nextdir = 0;
-
+	char success_flg = 0;
 	minimum = stepMap_back[x_coordinate][y_coordinate]; //デフォルトの最小は現在座標
 	//歩数比較(壁なしを確認してから)	優先度: 北>東>南>西
 	//北
@@ -267,6 +292,7 @@ char adachi_judge_nextdir_back(void)
 		{
 			minimum = stepMap_back[x_coordinate][y_coordinate + 1];
 			nextdir = 0;
+			success_flg = 1;
 		}
 	}
 	//東
@@ -276,6 +302,7 @@ char adachi_judge_nextdir_back(void)
 		{
 			minimum = stepMap_back[x_coordinate + 1][y_coordinate];
 			nextdir = 1;
+			success_flg = 1;
 		}
 	}
 	//南
@@ -285,6 +312,7 @@ char adachi_judge_nextdir_back(void)
 		{
 			minimum = stepMap_back[x_coordinate][y_coordinate - 1];
 			nextdir = 2;
+			success_flg = 1;
 		}
 	}
 	//西
@@ -294,8 +322,30 @@ char adachi_judge_nextdir_back(void)
 		{
 			minimum = stepMap_back[x_coordinate - 1][y_coordinate];
 			nextdir = 3;
+			success_flg = 1;
 		}
 	}
+	//等高線谷の場合
+	if (success_flg == 0)
+	{
+		if (judge_wall(x_coordinate, y_coordinate, NORTH) == 0)
+		{
+			nextdir = 0;
+		}
+		else if (judge_wall(x_coordinate, y_coordinate, EAST) == 0)
+		{
+			nextdir = 1;
+		}
+		else if (judge_wall(x_coordinate, y_coordinate, SOUTH) == 0)
+		{
+			nextdir = 2;
+		}
+		else
+		{
+			nextdir = 3;
+		}
+	}
+
 	//判定結果
 	nextdir += 4;
 	nextdir -= m_dir;
@@ -371,7 +421,7 @@ void generate_adachi_shortestRoute(void)
 //座標と方位を与えたらその場の壁の配列に壁を入れる関数
 void add_wall(char _x_coordinate, char _y_coordinate, char _dir)
 {
-	unsigned short one = 0x80; //MSBが1
+	unsigned short one = 0x8000; //MSBが1
 	//oneを必要なだけ右シフトさせたものと対応する配列のORを取ることで壁を追加
 	//外壁とスタート区画は更新せずreturn
 	if (_dir == NORTH)
@@ -386,11 +436,7 @@ void add_wall(char _x_coordinate, char _y_coordinate, char _dir)
 			return;
 		else if (_x_coordinate == 1 && _y_coordinate == 0)
 			return; //これはスタート区画の東壁
-		//yが0のときはシフト数が負になるので例外処理
-		if (_y_coordinate == 0)
-			wallV[_x_coordinate] |= (one >> (MAZE_SIZE - 1));
-		else
-			wallV[_x_coordinate] |= (one >> (_y_coordinate - 1));
+		wallV[_x_coordinate] |= (one >> (MAZE_SIZE - 1 - _y_coordinate));
 	}
 	else if (_dir == SOUTH)
 	{
@@ -404,11 +450,7 @@ void add_wall(char _x_coordinate, char _y_coordinate, char _dir)
 			return;
 		else if (_x_coordinate == 0 && _y_coordinate == 0)
 			return;
-		//yが0のときはシフト数が負になるので例外処理
-		if (_y_coordinate == 0)
-			wallV[_x_coordinate + 1] |= (one >> (MAZE_SIZE - 1));
-		else
-			wallV[_x_coordinate + 1] |= (one >> (_y_coordinate - 1));
+		wallV[_x_coordinate + 1] |= (one >> (MAZE_SIZE - 1 - _y_coordinate));
 	}
 }
 
@@ -418,7 +460,7 @@ void init_wall_exist_flg(void) {
 	exist_r_wall = 0;
 }
 //ある座標と機体向きにおいて左と前と右センサの値が閾値を超えていたらその方向の壁に壁を入れる関数
-void set_wall(_x_coordinate, _y_coordinate, _m_dir)
+void set_wall(char _x_coordinate, char _y_coordinate, char _m_dir)
 {
 	//壁存在flg初期化
 	exist_l_wall = 0;
@@ -451,9 +493,9 @@ void set_wall(_x_coordinate, _y_coordinate, _m_dir)
 
 //座標と方位を与えたらその場に壁があるかどうか判定する関数
 //あり : 1, なし : 0
-char judge_wall(_x_coordinate, _y_coordinate, _dir)
+char judge_wall(char _x_coordinate, char _y_coordinate, char _dir)
 {
-	unsigned short checker = 0x80; //MSBが1
+	unsigned short checker = 0x8000; //MSBが1
 
 	if (_dir == NORTH)
 	{
@@ -472,17 +514,7 @@ char judge_wall(_x_coordinate, _y_coordinate, _dir)
 			return 1;
 		else if (_x_coordinate == 1 && _y_coordinate == 0)
 			return 1;
-		//yが0のときはシフト数が負になるので例外処理
-		if (_y_coordinate == 0)
-		{
-			if ((wallV[_x_coordinate] & (checker >> (MAZE_SIZE - 1))) == 0x00)
-			{
-				return 0;
-			}
-			else
-				return 1;
-		}
-		if ((wallV[_x_coordinate] & (checker >> (_y_coordinate - 1))) == 0x00)
+		if ((wallV[_x_coordinate] & (checker >> (MAZE_SIZE - _y_coordinate - 1))) == 0x00)
 		{
 			return 0;
 		}
@@ -506,17 +538,7 @@ char judge_wall(_x_coordinate, _y_coordinate, _dir)
 			return 1;
 		else if (_x_coordinate == 0 && _y_coordinate == 0)
 			return 1;
-		//yが0のときはシフト数が負になるので例外処理
-		if (_y_coordinate == 0)
-		{
-			if ((wallV[_x_coordinate + 1] & (checker >> (MAZE_SIZE - 1))) == 0x00)
-			{
-				return 0;
-			}
-			else
-				return 1;
-		}
-		if ((wallV[_x_coordinate + 1] & (checker >> (_y_coordinate - 1))) == 0x00)
+		if ((wallV[_x_coordinate + 1] & (checker >> (MAZE_SIZE - _y_coordinate - 1))) == 0x00)
 		{
 			return 0;
 		}
@@ -528,7 +550,7 @@ char judge_wall(_x_coordinate, _y_coordinate, _dir)
 //座標と方位を与えたらその場の既知壁を保存する関数
 void add_knownWall(char _x_coordinate, char _y_coordinate, char _dir)
 {
-	unsigned short one = 0x80; //MSBが1
+	unsigned short one = 0x8000; //MSBが1
 	//oneを必要なだけ右シフトさせたものと対応する配列のORを取ることで既知壁を追加
 	if (_dir == NORTH)
 	{
@@ -536,11 +558,8 @@ void add_knownWall(char _x_coordinate, char _y_coordinate, char _dir)
 	}
 	else if (_dir == WEST)
 	{
-		//yが0のときはシフト数が負になるので例外処理
-		if (_y_coordinate == 0)
-			knownWallV[_x_coordinate] |= (one >> (MAZE_SIZE - 1));
-		else
-			knownWallV[_x_coordinate] |= (one >> (_y_coordinate - 1));
+		
+		knownWallV[_x_coordinate] |= (one >> (MAZE_SIZE - _y_coordinate - 1));
 	}
 	else if (_dir == SOUTH)
 	{
@@ -548,11 +567,8 @@ void add_knownWall(char _x_coordinate, char _y_coordinate, char _dir)
 	}
 	else if (_dir == EAST)
 	{
-		//yが0のときはシフト数が負になるので例外処理
-		if (_y_coordinate == 0)
-			knownWallV[_x_coordinate + 1] |= (one >> (MAZE_SIZE - 1));
-		else
-			knownWallV[_x_coordinate + 1] |= (one >> (_y_coordinate - 1));
+		
+		knownWallV[_x_coordinate + 1] |= (one >> (MAZE_SIZE - _y_coordinate - 1));
 	}
 }
 
@@ -560,7 +576,7 @@ void add_knownWall(char _x_coordinate, char _y_coordinate, char _dir)
 //既知 : 1, 未知 : 0
 char judge_knownWall(char _x_coordinate, char _y_coordinate, char _dir)
 {
-	unsigned short checker = 0x80; //MSBが1
+	unsigned short checker = 0x8000; //MSBが1
 	if (_dir == NORTH)
 	{
 		if ((knownWallH[_y_coordinate + 1] & (checker >> _x_coordinate)) == 0x00)
@@ -572,17 +588,7 @@ char judge_knownWall(char _x_coordinate, char _y_coordinate, char _dir)
 	}
 	else if (_dir == WEST)
 	{
-		//yが0のときはシフト数が負になるので例外処理
-		if (_y_coordinate == 0)
-		{
-			if ((knownWallV[_x_coordinate] & (checker >> (MAZE_SIZE - 1))) == 0x00)
-			{
-				return 0;
-			}
-			else
-				return 1;
-		}
-		if ((knownWallV[_x_coordinate] & (checker >> (_y_coordinate - 1))) == 0x00)
+		if ((knownWallV[_x_coordinate] & (checker >> (MAZE_SIZE - _y_coordinate - 1))) == 0x00)
 		{
 			return 0;
 		}
@@ -600,17 +606,7 @@ char judge_knownWall(char _x_coordinate, char _y_coordinate, char _dir)
 	}
 	else if (_dir == EAST)
 	{
-		//yが0のときはシフト数が負になるので例外処理
-		if (_y_coordinate == 0)
-		{
-			if ((knownWallV[_x_coordinate + 1] & (checker >> (MAZE_SIZE - 1))) == 0x00)
-			{
-				return 0;
-			}
-			else
-				return 1;
-		}
-		if ((knownWallV[_x_coordinate + 1] & (checker >> (_y_coordinate - 1))) == 0x00)
+		if ((knownWallV[_x_coordinate + 1] & (checker >> (MAZE_SIZE - _y_coordinate - 1))) == 0x00)
 		{
 			return 0;
 		}
@@ -654,6 +650,60 @@ void print_wall(void)
 				sci_printf("%d", stepMap[i][j]);
 
 			//sci_printf("   ");
+			//----------------------------------------------------------------
+			if (judge_wall(i, j, EAST) == 1)
+				sci_printf("|");
+			else
+				sci_printf(" ");
+		}
+		sci_printf("\r\n");
+	}
+	//外壁閉じ
+	for (i = 0; i < MAZE_SIZE; i++)
+	{
+		sci_printf("+");
+		if (judge_wall(i, 0, SOUTH) == 1)
+			sci_printf("---");
+		else
+			sci_printf("   ");
+	}
+	sci_printf("+");
+}
+//壁情報吐き出し関数
+void print_wall_back(void)
+{
+	short i, j, k;
+
+	for (j = MAZE_SIZE - 1; j >= 0; j--)
+	{
+		//横壁1列
+		for (i = 0; i < MAZE_SIZE; i++)
+		{
+			sci_printf("+");
+			if (judge_wall(i, j, NORTH) == 1)
+				sci_printf("---");
+			else
+				sci_printf("   ");
+		}
+		sci_printf("+");
+		sci_printf("\r\n");
+		//縦壁1列
+		if (judge_wall(0, j, WEST) == 1)
+			sci_printf("|");
+		else
+			sci_printf(" ");
+		for (i = 0; i < MAZE_SIZE; i++)
+		{
+			//マスの中----------------------------------------------------------
+
+			if (stepMap_back[i][j] < 10)
+				sci_printf(" %d ", stepMap_back[i][j]);
+			else if (stepMap_back[i][j] < 100)
+				sci_printf("%d ", stepMap_back[i][j]);
+			else if (stepMap_back[i][j] < 1000)
+				sci_printf("%d", stepMap_back[i][j]);
+
+			// sci_printf("   ");
 			//----------------------------------------------------------------
 			if (judge_wall(i, j, EAST) == 1)
 				sci_printf("|");

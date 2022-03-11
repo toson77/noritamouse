@@ -21,5 +21,6 @@ enum wall{
 	LEFT_WALL,
 	FRONT_WALL
 };
+extern volatile float g_current_angle;
 
 #endif

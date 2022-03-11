@@ -49,7 +49,7 @@ static volatile float current_dis_r = 0.0;
 static volatile float current_dis_l = 0.0;
 static volatile float current_dis_ave = 0.0;
 static volatile float current_angle = 0.0;
-static volatile float g_current_angle = 0.0;
+volatile float g_current_angle = 0.0;
 static float length;
 
 /*êßå‰åvéZóp-------------------------*/

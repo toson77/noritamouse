@@ -112,8 +112,9 @@ void main(void)
 			/*Å’Z‘–s1*/
 			case 2:
 				if((int)get_sen_value(LF_SEN)+(int)get_sen_value(LS_SEN)+(int)get_sen_value(RS_SEN)+(int)get_sen_value(RF_SEN) > SEN_DICISION) {
-					ledseg_2_interrupt(INTERRUPT_COUNT); //LED“_–Å	
-					run_shortestRoute();
+					ledseg_2_interrupt(INTERRUPT_COUNT); //LED“_–Å
+					wait_sec(1);
+					adachi_method_back_enable();
 					wait_sec(1);
 					
 				}

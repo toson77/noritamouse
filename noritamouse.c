@@ -44,12 +44,26 @@ void straight_wall_on_test() {
 }
 void turn_mini_test() {
 	//straight(0.045, 0.3, 0, 1.0, 1,0,-1);
-	turn(3600.0, 600.0, 0, 1000.0);
-	wait_sec(2);
-	for (int i = 0; i < 4*3; i++) {
-		wait_ms(100);
-		turn(90.0, 600.0, 0, 1000.0);
+	/*
+	turn(3600.0, 310.0, 0, 3000.0);
+	wait_ms(500);
+	turn(-3600.0, 310.0, 0, 3000.0);
+	*/
+
+	/*
+	for (int i = 0; i < 4; i++) {
+		wait_ms(500);
+		turn(360.0, 500.0, 0, 3000.0);
 	}
+	*/
+	
+
+	for (int i = 0; i < 4*10; i++) {
+		wait_ms(500);
+		turn(90.0, 500.0, 0, 3000.0);
+	}
+	
+	
 	//straight(0.045, 0.3, 0, 1.0, 1,0,-1);
 	//wait_ms(500);
 	/*
@@ -193,8 +207,8 @@ void main(void)
 				if((int)get_sen_value(LF_SEN)+(int)get_sen_value(LS_SEN)+(int)get_sen_value(RS_SEN)+(int)get_sen_value(RF_SEN) > SEN_DICISION) {
 					ledseg_9_interrupt(INTERRUPT_COUNT); //LED“_–Å
 					wait_sec(1);
-					print_wall();
-					print_wall_back();
+					//print_wall();
+					//print_wall_back();
 					print_run_log();
 					
 				}

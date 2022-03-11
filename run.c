@@ -105,7 +105,7 @@ void straight(float _length, float _top_speed, float _end_speed, float _accel, c
 		tmp_wall_control_flg = 0;
 	}
 	*/
-	//前壁あるときも壁制御オフ
+	//前壁あるとき壁制御オフ
 	if(exist_f_wall == 1) {
 		wall_control_flg = 0;
 		tmp_wall_control_flg = 0;
@@ -597,7 +597,7 @@ void control_speed(void){
 	
 	//実際の角度
 	current_angle += current_omega / 1000.0;
-	g_current_angle = current_angle;
+	g_current_angle += current_omega / 1000.0;
 	//log_save((short)(current_vel_ave*1000.0));
 	//log_save((short)(tar_vel*1000.0));
 	if(get_time(TYPE_MYMS) % 4 == 0) {
@@ -606,7 +606,7 @@ void control_speed(void){
 		//log_save((short)(current_vel_r*1000), (short)(current_vel_l*1000),(short)(tar_vel*1000),(short)(angle));
 		//log_save((short)(current_dis_ave*1000), (short)(current_vel_ave*1000), (short)(tar_vel*1000), (short)(length*1000));
 		//log_save(1,1);
-		log_save(get_sen_value(LF_SEN), get_sen_value(LS_SEN), get_sen_value(RS_SEN), get_sen_value(RF_SEN));
+		//log_save(get_sen_value(LF_SEN), get_sen_value(LS_SEN), get_sen_value(RS_SEN), get_sen_value(RF_SEN));
 	}
 	//log_save((short)(tar_omega));
 	//log_save((short)(current_dis_ave*1000.0));
@@ -702,7 +702,7 @@ void pid_speed(void){
 		l_control = ( VEL_KP * vel_error_p ) + ( VEL_KI * vel_error_i ) + ( VEL_KD * vel_error_d ) - ( ( OMEGA_KP / 100.0 ) * omega_error_p ) - ( ( OMEGA_KI / 100.0 ) * omega_error_i ) - ( ( OMEGA_KD / 100.0 ) * omega_error_d );
 	}
 	if(get_time(TYPE_MYMS) % 2 == 0) {
-		//log_save((short)(current_omega), (short)(tar_omega),(short)(current_angle),(short)(angle));
+		log_save((short)(current_omega), (short)(tar_omega),(short)(current_angle),(short)(g_current_angle));
 		//log_save((short)(r_control*1000), (short)(l_control*1000),(short)(tar_vel*1000),(short)(angle));
 		//log_save((short)(current_dis_ave*1000), (short)(current_vel_ave*1000), (short)(tar_vel*1000), (short)(tar_dis*1000));
 		//log_save(1,1);

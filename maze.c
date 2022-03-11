@@ -8,8 +8,8 @@
 
 #define MAZE_SIZE 16
 // start 0 0
-#define GOAL_X_COODINATE 3
-#define GOAL_Y_COODINATE 3
+#define GOAL_X_COODINATE 7
+#define GOAL_Y_COODINATE 7
 
 //ƒOƒ[ƒoƒ‹•Ï”--------------
 char x_coordinate = 0;
@@ -174,6 +174,7 @@ char adachi_judge_nextdir(void)
 			success_flg = 1;
 		}
 	}
+	/*
 	//“™‚ü’J‚Ìê‡
 	if (success_flg == 0)
 	{
@@ -194,6 +195,7 @@ char adachi_judge_nextdir(void)
 			nextdir = 3;
 		}
 	}
+		*/
 	//”»’èŒ‹‰Ê
 	nextdir += 4;
 	nextdir -= m_dir;
@@ -325,6 +327,7 @@ char adachi_judge_nextdir_back(void)
 			success_flg = 1;
 		}
 	}
+	/*
 	//“™‚ü’J‚Ìê‡
 	if (success_flg == 0)
 	{
@@ -345,6 +348,7 @@ char adachi_judge_nextdir_back(void)
 			nextdir = 3;
 		}
 	}
+	*/
 
 	//”»’èŒ‹‰Ê
 	nextdir += 4;

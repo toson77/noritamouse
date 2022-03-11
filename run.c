@@ -49,6 +49,7 @@ static volatile float current_dis_r = 0.0;
 static volatile float current_dis_l = 0.0;
 static volatile float current_dis_ave = 0.0;
 static volatile float current_angle = 0.0;
+static volatile float g_current_angle = 0.0;
 static float length;
 
 /*制御計算用-------------------------*/
@@ -98,10 +99,12 @@ void straight(float _length, float _top_speed, float _end_speed, float _accel, c
 	turn_flg = 0;
 	forward_wall_stop_flg = _forward_wall;
 	//壁なかったら壁制御オフ
+	/*
 	if (exist_l_wall == 0 && exist_r_wall == 0) {
 		wall_control_flg = 0;
 		tmp_wall_control_flg = 0;
 	}
+	*/
 	//前壁あるときも壁制御オフ
 	if(exist_f_wall == 1) {
 		wall_control_flg = 0;
@@ -594,6 +597,7 @@ void control_speed(void){
 	
 	//実際の角度
 	current_angle += current_omega / 1000.0;
+	g_current_angle = current_angle;
 	//log_save((short)(current_vel_ave*1000.0));
 	//log_save((short)(tar_vel*1000.0));
 	if(get_time(TYPE_MYMS) % 4 == 0) {

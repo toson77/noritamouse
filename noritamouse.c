@@ -126,8 +126,9 @@ void main(void)
 				if((int)get_sen_value(LF_SEN)+(int)get_sen_value(LS_SEN)+(int)get_sen_value(RS_SEN)+(int)get_sen_value(RF_SEN) > SEN_DICISION) {
 					ledseg_3_interrupt(INTERRUPT_COUNT); //LED“_–Å
 					wait_sec(1);
+					adachi_method_g();
 					//straight_wall_on_test();
-					turn_mini_test();
+					//turn_mini_test();
 					//back_test();
 					//straight(SECTION*10, 0.3, 0, 1.0, 1,0);
 					

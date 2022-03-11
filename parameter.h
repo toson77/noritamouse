@@ -27,7 +27,7 @@
 //随時調整するパラメータ--------------------------------------
 #define MAX_VEL 3.0       //最高速度[m/s]
 #define MIN_VEL 0.1      //最低速度[m/s]
-#define MIN_OMEGA 50.0   //最低角速度[deg/s]
+#define MIN_OMEGA 60.0   //最低角速度[deg/s]
 #define SEARCH_SPEED 0.3  //探索速度[m/s]
 #define SEARCH_ACCEL 1.0  //探索加速度[m/s^2]
 #define FAST_SPEED 1.0    //最短速度[m/s]

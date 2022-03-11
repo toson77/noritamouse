@@ -8,19 +8,15 @@
 ## Record
 | Tournament                        | Record      |
 |:-----------                       |------------:|
-| 2021‘S“ú–{ƒ}ƒCƒNƒƒ}ƒEƒX‘å‰ï      | ƒŠƒ^ƒCƒ„    |
-| 2021‘S“ú–{Šw¶ƒ}ƒCƒNƒƒ}ƒEƒX‘å‰ï  | ƒŠƒ^ƒCƒ„    |
-| 2022‘S“ú–{ƒ}ƒCƒNƒƒ}ƒEƒX‘å‰ï      | will        |
+| 2021å…¨æ—¥æœ¬ãƒžã‚¤ã‚¯ãƒ­ãƒžã‚¦ã‚¹å¤§ä¼š      | ãƒªã‚¿ã‚¤ãƒ¤    |
+| 2021å…¨æ—¥æœ¬å­¦ç”Ÿãƒžã‚¤ã‚¯ãƒ­ãƒžã‚¦ã‚¹å¤§ä¼š  | ãƒªã‚¿ã‚¤ãƒ¤    |
+| 2022å…¨æ—¥æœ¬ãƒžã‚¤ã‚¯ãƒ­ãƒžã‚¦ã‚¹å¤§ä¼š      | will        |
 
 ## Image
 ### 2021
 ### 2022
 ## Improvement
-- ƒZƒ“ƒT‚Ì”z’u‚ÌŒ©’¼‚µ
-- •Ç“–‚Ä•â³‚ÌŠÏ“_‚©‚çADSubƒRƒlƒNƒ^‚ÌŽæ‚èŠO‚µ
-- •â³ƒ\ƒtƒgƒEƒFƒA‚Ì‰ü—Ç
+- ã‚»ãƒ³ã‚µã®é…ç½®ã®è¦‹ç›´ã—
+- å£å½“ã¦è£œæ­£ã®è¦³ç‚¹ã‹ã‚‰ã€DSubã‚³ãƒã‚¯ã‚¿ã®å–ã‚Šå¤–ã—
+- è£œæ­£ã‚½ãƒ•ãƒˆã‚¦ã‚§ã‚¢ã®æ”¹è‰¯
 
-## Reference
-Hardware:[‹ê‚µ‚ñ‚Åì‚éƒ}ƒCƒNƒƒ}ƒEƒX](https://www.amazon.co.jp/dp/B072FF7VCJ/ref=cm_sw_r_tw_dp_J1FNRM0HF0BJ1ZWEKQRW)
-
-Software:[ƒ}ƒCƒNƒƒ}ƒEƒX‚Å‚Í‚¶‚ß‚æ‚¤ ƒƒ{ƒbƒgƒvƒƒOƒ‰ƒ~ƒ“ƒO“ü–å](https://www.amazon.co.jp/dp/4274507114/ref=cm_sw_r_tw_dp_E60VP8VR8RMMF5D40D4C)

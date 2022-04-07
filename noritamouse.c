@@ -40,20 +40,39 @@ void abort(void);
 #endif
 
 void straight_wall_on_test() {
-	straight(SECTION * 3, SEARCH_SPEED, 0, SEARCH_ACCEL, 1, 0);
+	straight(SECTION * 6, SEARCH_SPEED, 0, SEARCH_ACCEL, 1, 0);
 }
 void turn_mini_test() {
-	straight(0.045, 0.3, 0, 1.0, 1,0,-1);
+	//straight(0.045, 0.3, 0, 1.0, 1,0,-1);
+	/*
+	turn(3600.0, 310.0, 0, 3000.0);
+	wait_ms(500);
+	turn(-3600.0, 310.0, 0, 3000.0);
+	*/
+
+	/*
+	for (int i = 0; i < 4; i++) {
+		wait_ms(500);
+		turn(360.0, 500.0, 0, 3000.0);
+	}
+	*/
+	
+
+	for (int i = 0; i < 4*10; i++) {
+		wait_ms(500);
+		turn(90.0, 500.0, 0, 3000.0);
+	}
+	
+	
+	//straight(0.045, 0.3, 0, 1.0, 1,0,-1);
+	//wait_ms(500);
+	/*
+	turn(180.0, 300.0, 0, 500.0);
 	wait_ms(100);
-	turn(180.0, 300.0, 0, 500.0);
-	wait_ms(500);
-	straight(0.045, 0.3, 0, 1.0, 1,0,-1);
-	wait_ms(500);
-	turn(180.0, 300.0, 0, 500.0);
-	wait_ms(500);
 	turn(-180.0, 300.0, 0, 500.0);
-	wait_ms(500);
+	wait_ms(100);
 	turn(-180.0, 300.0, 0, 500.0);
+	*/
 }
 void back_test() {
 	revision_back(0.01, SEARCH_SPEED, SEARCH_ACCEL);
@@ -93,8 +112,9 @@ void main(void)
 			/*最短走行1*/
 			case 2:
 				if((int)get_sen_value(LF_SEN)+(int)get_sen_value(LS_SEN)+(int)get_sen_value(RS_SEN)+(int)get_sen_value(RF_SEN) > SEN_DICISION) {
-					ledseg_2_interrupt(INTERRUPT_COUNT); //LED点滅	
-					run_shortestRoute();
+					ledseg_2_interrupt(INTERRUPT_COUNT); //LED点滅
+					wait_sec(1);
+					adachi_method_back_enable();
 					wait_sec(1);
 					
 				}
@@ -106,7 +126,8 @@ void main(void)
 				if((int)get_sen_value(LF_SEN)+(int)get_sen_value(LS_SEN)+(int)get_sen_value(RS_SEN)+(int)get_sen_value(RF_SEN) > SEN_DICISION) {
 					ledseg_3_interrupt(INTERRUPT_COUNT); //LED点滅
 					wait_sec(1);
-					straight_wall_on_test();
+					adachi_method_g();
+					//straight_wall_on_test();
 					//turn_mini_test();
 					//back_test();
 					//straight(SECTION*10, 0.3, 0, 1.0, 1,0);
@@ -150,9 +171,9 @@ void main(void)
 				if((int)get_sen_value(LF_SEN)+(int)get_sen_value(LS_SEN)+(int)get_sen_value(RS_SEN)+(int)get_sen_value(RF_SEN) > SEN_DICISION) {
 					ledseg_6_interrupt(INTERRUPT_COUNT); //LED点滅
 					wait_sec(1);
-					turn(3600, 300.0, 0, 500.0);
+					turn(3600, 600.0, 0, 500.0);
 					wait_sec(3);
-					turn(-3600, 300.0, 0, 500.0);
+					turn(-3600, 600.0, 0, 500.0);
 					
 					
 					
@@ -188,8 +209,8 @@ void main(void)
 				if((int)get_sen_value(LF_SEN)+(int)get_sen_value(LS_SEN)+(int)get_sen_value(RS_SEN)+(int)get_sen_value(RF_SEN) > SEN_DICISION) {
 					ledseg_9_interrupt(INTERRUPT_COUNT); //LED点滅
 					wait_sec(1);
-					print_wall();
-					print_wall_back();
+					//print_wall();
+					//print_wall_back();
 					print_run_log();
 					
 				}

@@ -49,6 +49,7 @@ static volatile float current_dis_r = 0.0;
 static volatile float current_dis_l = 0.0;
 static volatile float current_dis_ave = 0.0;
 static volatile float current_angle = 0.0;
+volatile float g_current_angle = 0.0;
 static float length;
 
 /*制御計算用-------------------------*/
@@ -98,11 +99,13 @@ void straight(float _length, float _top_speed, float _end_speed, float _accel, c
 	turn_flg = 0;
 	forward_wall_stop_flg = _forward_wall;
 	//壁なかったら壁制御オフ
+	/*
 	if (exist_l_wall == 0 && exist_r_wall == 0) {
 		wall_control_flg = 0;
 		tmp_wall_control_flg = 0;
 	}
-	//前壁あるときも壁制御オフ
+	*/
+	//前壁あるとき壁制御オフ
 	if(exist_f_wall == 1) {
 		wall_control_flg = 0;
 		tmp_wall_control_flg = 0;
@@ -431,6 +434,140 @@ void turn( float _angle, float _top_omega, float _end_omega, float _alpha ){
 	
 }
 
+void turn_g(float _angle, float _top_omega, float _end_omega, float _alpha, char _m_dir)
+{
+
+	//加速区間角度, 減速区間角度
+	float accel_angle, brake_angle;
+	//( accel_angle + brake_angle ) > angle だった場合の最高角速度
+	float top_omega2;
+	//初角速度
+	float start_omega = 0.0;
+
+	float start_angle = g_current_angle;
+	float end_angle;
+	float angle_diff = 0.0;
+	if (_m_dir == 0) {
+		if(_angle > 0) {
+			end_angle = 90;
+		}else {
+			end_angle = 270;
+		}
+	}
+	else if (_m_dir == 1) {
+		if (_angle > 0)
+		{
+			end_angle = 0;
+		}
+		else
+		{
+			end_angle = 180;
+		}
+	}
+	else if (_m_dir == 2) {
+		if (_angle > 0)
+		{
+			end_angle = 270;
+		}
+		else
+		{
+			end_angle = 90;
+		}
+	}
+	else {
+		if (_angle > 0)
+		{
+			end_angle = 180;
+		}
+		else
+		{
+			end_angle = 0;
+		}
+	}
+
+		//目標角度, 目標重心速度, 加速度, 目標角速度, 角加速度設定
+		angle = _angle;
+	target_speed = 0;
+	accel = 0;
+	if (angle < 0.0)
+		target_omega = -_top_omega;
+	else
+		target_omega = _top_omega;
+	alpha = _alpha;
+
+	//モーターON, 速度制御ON, 壁制御OFF, ターンフラグON
+	MOT_STBY = 1;
+	turn_flg = 1;
+	wall_control_flg = 0;
+	speed_control_flg = 1;
+
+	//目標角度が負なら計算のため正に直す
+	if (angle < 0.0)
+		angle = -angle;
+
+	start_omega = current_omega;
+	accel_angle = ((_top_omega + start_omega) * (_top_omega - start_omega)) / (2.0 * _alpha);
+	brake_angle = ((_top_omega + _end_omega) * (_top_omega - _end_omega)) / (2.0 * _alpha);
+	if (angle < (accel_angle + brake_angle))
+	{
+		// top_omega^2 - start_omega^2 = 2.0 * alpha * x1(加速角度)
+		// end_omega^2 - top_omega^2 = 2.0 * -alpha * x2(減速角度)
+		//(x1 + x2) = angle
+		//より, 最高速top_omega2は
+		top_omega2 = ((2.0 * _alpha * angle) + (start_omega * start_omega) + (_end_omega * _end_omega)) / 2.0;
+		//これを2番目の減速角度の式に代入すれば
+		brake_angle = (top_omega2 - (_end_omega * _end_omega)) / (2.0 * _alpha);
+	}
+
+	//戻す
+	angle = _angle;
+
+	//目標角度が正の場合
+	if (_angle > 0.0)
+	{
+		//減速開始区間まで待つ
+		while (current_angle < (angle - brake_angle))
+			;
+		//減速開始
+		target_omega = _end_omega;
+		//終端角速度が0の場合最低角速度設定
+		if (_end_omega > -0.0009 && _end_omega < 0.0009)
+		{
+			target_omega = MIN_OMEGA;
+		}
+		//目標角度まで待つ
+		while (g_current_angle < end_angle-0.3 || end_angle+0.3 < g_current_angle)
+			;
+
+		//目標角度が負の場合
+	}
+	else if (_angle < 0.0)
+	{
+		//減速開始区間まで待つ
+		while (current_angle > -(-angle - brake_angle))
+			;
+		//減速開始
+		target_omega = _end_omega;
+		//終端角速度が0の場合最低角速度設定
+		if (_end_omega > -0.0009 && _end_omega < 0.0009)
+		{
+			target_omega = -MIN_OMEGA;
+		}
+		//目標角度まで待つ
+		while (g_current_angle < end_angle-0.3 || end_angle+0.3 < g_current_angle)
+			;
+	}
+
+	//スピード制御OFF
+	speed_control_flg = 0;
+	direction_r_mot(MOT_BRAKE);
+	direction_l_mot(MOT_BRAKE);
+	duty_l = 0;
+	duty_r = 0;
+	//ステータスリセット
+	reset_run_status();
+}
+
 //スラローム( 重心速度維持 )
 //目標角度, 最高角速度, 終端角速度, 角加速度
 void slalom( float _angle, float _top_omega, float _end_omega, float _alpha ){
@@ -594,6 +731,13 @@ void control_speed(void){
 	
 	//実際の角度
 	current_angle += current_omega / 1000.0;
+	g_current_angle += current_omega / 1000.0;
+	if(g_current_angle <= 0) {
+		g_current_angle = 360 + g_current_angle;
+	}
+	if(g_current_angle >= 360) {
+		g_current_angle = g_current_angle - 360;
+	}
 	//log_save((short)(current_vel_ave*1000.0));
 	//log_save((short)(tar_vel*1000.0));
 	if(get_time(TYPE_MYMS) % 4 == 0) {
@@ -602,7 +746,7 @@ void control_speed(void){
 		//log_save((short)(current_vel_r*1000), (short)(current_vel_l*1000),(short)(tar_vel*1000),(short)(angle));
 		//log_save((short)(current_dis_ave*1000), (short)(current_vel_ave*1000), (short)(tar_vel*1000), (short)(length*1000));
 		//log_save(1,1);
-		log_save(get_sen_value(LF_SEN), get_sen_value(LS_SEN), get_sen_value(RS_SEN), get_sen_value(RF_SEN));
+		//log_save(get_sen_value(LF_SEN), get_sen_value(LS_SEN), get_sen_value(RS_SEN), get_sen_value(RF_SEN));
 	}
 	//log_save((short)(tar_omega));
 	//log_save((short)(current_dis_ave*1000.0));
@@ -665,27 +809,11 @@ void pid_speed(void){
 		V_r += ( tar_omega * ( PI / 180.0 ) * FF_KOMEGA ) + ( -alpha * ( PI / 180.0 ) * FF_KALPHA ) + ( turn_flg * get_sign(angle) * FF_FRIC_R );
 		V_l -= ( tar_omega * ( PI / 180.0 ) * FF_KOMEGA ) + ( -alpha * ( PI / 180.0 ) * FF_KALPHA ) + ( turn_flg * get_sign(angle) * FF_FRIC_L );
 	}
-	//turn時左右別々に見る(r_val = -l_valとみなせる)
-	if(turn_flg == 2) {
 		//速度PI計算
-		pre_vel_error_pr = vel_error_pr;
-		vel_error_pr =  tar_omega*TREAD*PI/(2*180) - current_vel_r ;
-		vel_error_ir += vel_error_pr * DELTA_T;
-		//vel_error_dr = ( vel_error_pr - pre_vel_error_pr ) * DELTA_T;
-		pre_vel_error_pl = vel_error_pl;
-		vel_error_pl =  tar_omega*TREAD*PI/(2*180) - current_vel_l ;
-		vel_error_il += vel_error_pl * DELTA_T;
-		//FB制御量計算
-		r_control = ( OMEGA_KPV * vel_error_pr ) + ( OMEGA_KIV * vel_error_ir ); //+ ( VEL_KD * vel_error_dr );
-		l_control = -( OMEGA_KPV * vel_error_pl ) - ( OMEGA_KIV * vel_error_il ); //+ ( VEL_KD * vel_error_dl );
-	
-	}
-	else {
-		//速度PI計算
-			pre_vel_error_p = vel_error_p;
-			vel_error_p = ( tar_vel - current_vel_ave );
-			vel_error_i += vel_error_p * DELTA_T;
-			vel_error_d = ( vel_error_p - pre_vel_error_p ) * DELTA_T;
+		pre_vel_error_p = vel_error_p;
+		vel_error_p = ( tar_vel - current_vel_ave );
+		vel_error_i += vel_error_p * DELTA_T;
+		vel_error_d = ( vel_error_p - pre_vel_error_p ) * DELTA_T;
 		
 		//角速度PI計算
 		pre_omega_error_p = omega_error_p;
@@ -696,9 +824,9 @@ void pid_speed(void){
 		//FB制御量計算
 		r_control = ( VEL_KP * vel_error_p ) + ( VEL_KI * vel_error_i ) + ( VEL_KD * vel_error_d ) + ( ( OMEGA_KP / 100.0 ) * omega_error_p ) + ( ( OMEGA_KI / 100.0 ) * omega_error_i ) + ( ( OMEGA_KD / 100.0 ) * omega_error_d );
 		l_control = ( VEL_KP * vel_error_p ) + ( VEL_KI * vel_error_i ) + ( VEL_KD * vel_error_d ) - ( ( OMEGA_KP / 100.0 ) * omega_error_p ) - ( ( OMEGA_KI / 100.0 ) * omega_error_i ) - ( ( OMEGA_KD / 100.0 ) * omega_error_d );
-	}
+
 	if(get_time(TYPE_MYMS) % 2 == 0) {
-		//log_save((short)(current_omega), (short)(tar_omega),(short)(current_angle),(short)(angle));
+		log_save((short)(current_omega), (short)(tar_omega),(short)(current_angle),(short)(g_current_angle));
 		//log_save((short)(r_control*1000), (short)(l_control*1000),(short)(tar_vel*1000),(short)(angle));
 		//log_save((short)(current_dis_ave*1000), (short)(current_vel_ave*1000), (short)(tar_vel*1000), (short)(tar_dis*1000));
 		//log_save(1,1);

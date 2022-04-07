@@ -12,7 +12,8 @@
 
 //機体固有定数
 #define MOUSE_WEIGHT 100     //機体重量[g]  
-#define TREAD 0.07069          //トレッド幅[m] 回転調整、距離が合っているなら弄る、距離があっていないならタイヤ直径を先に弄る 回転がデカい場合は小さく、小さい場合は大きく
+//#define TREAD 0.07069          //トレッド幅[m] 回転調整、距離が合っているなら弄る、距離があっていないならタイヤ直径を先に弄る 回転がデカい場合は小さく、小さい場合は大きく
+#define TREAD 0.07088
 #define REDUCTION_RATIO 3.75 //減速比
 //SCR13-2005モーターの定数
 #define TORQUE_CONSTANT 4.49     //トルク定数Kt[mN*m/A]
@@ -26,7 +27,7 @@
 //随時調整するパラメータ--------------------------------------
 #define MAX_VEL 3.0       //最高速度[m/s]
 #define MIN_VEL 0.1      //最低速度[m/s]
-#define MIN_OMEGA 200.0   //最低角速度[deg/s]
+#define MIN_OMEGA 60.0   //最低角速度[deg/s]
 #define SEARCH_SPEED 0.3  //探索速度[m/s]
 #define SEARCH_ACCEL 1.0  //探索加速度[m/s^2]
 #define FAST_SPEED 1.0    //最短速度[m/s]
@@ -38,10 +39,17 @@
 #define TURN_ACCEL 1.0        //回転加速度[m/s^2]
 #define SLALOM_TURN_ACCEL 1.0 //スラローム加速度[m/s^2]
 
-#define REF_LF 293         //左横壁センサ基準値
-#define REF_RF 288          //右横壁センサ基準値
-#define LEFT_THRESHOLD 73  //左壁センサ閾値
-#define RIGHT_THRESHOLD 126 //右壁センサ閾値
+//#define REF_LF 293         //左横壁センサ基準値
+//#define REF_RF 288          //右横壁センサ基準値
+#define REF_LF 296         //左横壁センサ基準値
+#define REF_RF 294         //左横壁センサ基準値
+
+//#define LEFT_THRESHOLD 73  //左壁センサ閾値
+#define LEFT_THRESHOLD 70  //左壁センサ閾値
+
+//#define RIGHT_THRESHOLD 126 //右壁センサ閾値
+#define RIGHT_THRESHOLD 122 //右壁センサ閾値
+
 //#define FRONT_THRESHOLD 550 //前壁センサ閾値
 #define FRONT_THRESHOLD 710 //前壁センサ閾値
 #define FRONT_WALL_STOPL 2403 //前壁補正目標値

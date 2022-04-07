@@ -809,27 +809,11 @@ void pid_speed(void){
 		V_r += ( tar_omega * ( PI / 180.0 ) * FF_KOMEGA ) + ( -alpha * ( PI / 180.0 ) * FF_KALPHA ) + ( turn_flg * get_sign(angle) * FF_FRIC_R );
 		V_l -= ( tar_omega * ( PI / 180.0 ) * FF_KOMEGA ) + ( -alpha * ( PI / 180.0 ) * FF_KALPHA ) + ( turn_flg * get_sign(angle) * FF_FRIC_L );
 	}
-	//turnéûç∂âEï ÅXÇ…å©ÇÈ(r_val = -l_valÇ∆Ç›Ç»ÇπÇÈ)
-	if(turn_flg == 2) {
 		//ë¨ìxPIåvéZ
-		pre_vel_error_pr = vel_error_pr;
-		vel_error_pr =  tar_omega*TREAD*PI/(2*180) - current_vel_r ;
-		vel_error_ir += vel_error_pr * DELTA_T;
-		//vel_error_dr = ( vel_error_pr - pre_vel_error_pr ) * DELTA_T;
-		pre_vel_error_pl = vel_error_pl;
-		vel_error_pl =  tar_omega*TREAD*PI/(2*180) - current_vel_l ;
-		vel_error_il += vel_error_pl * DELTA_T;
-		//FBêßå‰ó åvéZ
-		r_control = ( OMEGA_KPV * vel_error_pr ) + ( OMEGA_KIV * vel_error_ir ); //+ ( VEL_KD * vel_error_dr );
-		l_control = -( OMEGA_KPV * vel_error_pl ) - ( OMEGA_KIV * vel_error_il ); //+ ( VEL_KD * vel_error_dl );
-	
-	}
-	else {
-		//ë¨ìxPIåvéZ
-			pre_vel_error_p = vel_error_p;
-			vel_error_p = ( tar_vel - current_vel_ave );
-			vel_error_i += vel_error_p * DELTA_T;
-			vel_error_d = ( vel_error_p - pre_vel_error_p ) * DELTA_T;
+		pre_vel_error_p = vel_error_p;
+		vel_error_p = ( tar_vel - current_vel_ave );
+		vel_error_i += vel_error_p * DELTA_T;
+		vel_error_d = ( vel_error_p - pre_vel_error_p ) * DELTA_T;
 		
 		//äpë¨ìxPIåvéZ
 		pre_omega_error_p = omega_error_p;
@@ -840,7 +824,7 @@ void pid_speed(void){
 		//FBêßå‰ó åvéZ
 		r_control = ( VEL_KP * vel_error_p ) + ( VEL_KI * vel_error_i ) + ( VEL_KD * vel_error_d ) + ( ( OMEGA_KP / 100.0 ) * omega_error_p ) + ( ( OMEGA_KI / 100.0 ) * omega_error_i ) + ( ( OMEGA_KD / 100.0 ) * omega_error_d );
 		l_control = ( VEL_KP * vel_error_p ) + ( VEL_KI * vel_error_i ) + ( VEL_KD * vel_error_d ) - ( ( OMEGA_KP / 100.0 ) * omega_error_p ) - ( ( OMEGA_KI / 100.0 ) * omega_error_i ) - ( ( OMEGA_KD / 100.0 ) * omega_error_d );
-	}
+
 	if(get_time(TYPE_MYMS) % 2 == 0) {
 		log_save((short)(current_omega), (short)(tar_omega),(short)(current_angle),(short)(g_current_angle));
 		//log_save((short)(r_control*1000), (short)(l_control*1000),(short)(tar_vel*1000),(short)(angle));

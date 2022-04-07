@@ -1,9 +1,10 @@
-<div align="center">
 # noritamouse
 DC Motor ClasicMouse
 
 ## Image
+<div align="center">
 <img src="schematics/mouse.jpg" width="300px" />
+</div>
 
 ## Technical Data
 - CPU: Renesas RX220

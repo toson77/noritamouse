@@ -1,5 +1,6 @@
+<div align="center">
 # noritamouse
-DCMotor ClasicMouse
+DC Motor ClasicMouse
 
 ## Image
 <img src="schematics/mouse.jpg" width="300px" />
